@@ -121,6 +121,8 @@ em{font-weight:400;color:#ac694b}
 .finish-mark{display:block;font-size:48px;color:#ad8856;margin-bottom:15px}
 .stage-finish h2{font-size:42px;margin:12px 0}
 .stage-finish p{color:#758075;line-height:1.7;font-size:15px}
+.stage-finish .finish-sentence{background:#eef3ea;border:1px solid #d9e3d4;border-radius:6px;padding:13px 16px;font-family:Georgia,serif;color:#567660}
+.finish-sentence strong{font-weight:600;color:#315b46}
 .finish-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:28px}
 .play-page{padding-bottom:80px}
 .play-intro{padding-bottom:40px}

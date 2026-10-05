@@ -46,9 +46,9 @@ export const lessons: Record<StageId, Card[]> = {
   digraphs: [
     { id: 'ship', answer: 'ship', choices: ['ship', 'chip', 'shin'], spoken: 'ship', parts: ['sh', 'i', 'p'], note: 'sh makes one sound in ship' },
     { id: 'chat', answer: 'chat', choices: ['that', 'chat', 'chap'], spoken: 'chat', parts: ['ch', 'a', 't'], note: 'ch makes one sound in chat' },
-    { id: 'thin', answer: 'thin', choices: ['shin', 'then', 'thin'], spoken: 'thin', parts: ['th', 'i', 'n'], note: 'th makes one sound in thin' },
-    { id: 'sing', answer: 'sing', choices: ['sing', 'sang', 'song'], spoken: 'sing', parts: ['s', 'i', 'ng'], note: 'ng makes one sound in sing' },
-    { id: 'mash', answer: 'mash', choices: ['math', 'mash', 'match'], spoken: 'mash', parts: ['m', 'a', 'sh'], note: 'm · a · sh → mash' },
-    { id: 'path', answer: 'path', choices: ['patch', 'path', 'pass'], spoken: 'path', parts: ['p', 'a', 'th'], note: 'p · a · th → path' },
+    { id: 'thin', answer: 'thin', choices: ['shin', 'than', 'thin'], spoken: 'thin', parts: ['th', 'i', 'n'], note: 'th makes one sound in thin' },
+    { id: 'sing', answer: 'sing', choices: ['sing', 'sang', 'ding'], spoken: 'sing', parts: ['s', 'i', 'ng'], note: 'ng makes one sound in sing' },
+    { id: 'mash', answer: 'mash', choices: ['math', 'mash', 'dash'], spoken: 'mash', parts: ['m', 'a', 'sh'], note: 'm · a · sh → mash' },
+    { id: 'path', answer: 'path', choices: ['pat', 'path', 'pan'], spoken: 'path', parts: ['p', 'a', 'th'], note: 'p · a · th → path' },
   ],
 };
