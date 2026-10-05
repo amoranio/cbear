@@ -1,0 +1,13 @@
+{
+  "id": "station-001",
+  "title": "The station",
+  "image": "scenes/station.jpg",
+  "alt": "A crowded old railway station with trains, passengers, flowers, luggage and a small brown bear wearing a navy scarf.",
+  "bear": { "x": 0.589, "y": 0.489, "w": 0.037, "h": 0.084 },
+  "clues": {
+    "sounds": { "text": "Listen for t in train. Look near the train.", "spoken": "Listen for the t sound in train. Look near the train.", "focus": "t", "audio": "audio/clues/station-001-sounds.wav" },
+    "words": { "text": "Look by the bags. Sound out bag.", "spoken": "Look by the bags. Sound out bag: b, a, g.", "focus": "bag", "audio": "audio/clues/station-001-words.wav" },
+    "digraphs": { "text": "Check the cases. Listen for ch in check.", "spoken": "Check the cases. Listen for ch in check.", "focus": "check", "audio": "audio/clues/station-001-digraphs.wav" }
+  },
+  "hint": "Look in front of the stacked trunks."
+}

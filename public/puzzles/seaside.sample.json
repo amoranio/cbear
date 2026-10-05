@@ -1,0 +1,13 @@
+{
+  "id": "seaside-001",
+  "title": "The seaside",
+  "image": "scenes/seaside.jpg",
+  "alt": "A busy British beach with a pier, boats, people, rock pools, beach huts and a small brown bear wearing a navy scarf.",
+  "bear": { "x": 0.626, "y": 0.659, "w": 0.03, "h": 0.072 },
+  "clues": {
+    "sounds": { "text": "Listen for s in sand. Look near the sand.", "spoken": "Listen for the s sound in sand. Look near the sand.", "focus": "s", "audio": "audio/clues/seaside-001-sounds.wav" },
+    "words": { "text": "Look by a hut. Sound out hut.", "spoken": "Look by a hut. Sound out hut: h, u, t.", "focus": "hut", "audio": "audio/clues/seaside-001-words.wav" },
+    "digraphs": { "text": "Check the huts near the shore. Listen for sh.", "spoken": "Check the huts near the shore. Listen for sh in shore.", "focus": "shore", "audio": "audio/clues/seaside-001-digraphs.wav" }
+  },
+  "hint": "Look beside the red beach hut."
+}

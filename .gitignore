@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.DS_Store
+.venv/
+.voice-model/
+tsconfig.tsbuildinfo
+:memory:.ses
