@@ -9,11 +9,11 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:5173/cbear/`. Run `npm run build` before publishing; it checks TypeScript, builds the Pages bundle and validates the puzzle manifests.
+Open `http://localhost:5173/`. Run `npm run build` before publishing; it checks TypeScript, builds the Pages bundle and validates the puzzle manifests.
 
 ## Hosting
 
-The workflow in `.github/workflows/deploy.yml` builds and deploys on each push to `main`. In repository **Settings → Pages → Build and deployment**, select **GitHub Actions** as the source. The public URL is <https://amoranio.github.io/cbear/>. The Vite base path is `/cbear/`; change it only if the repository name or hosting path changes.
+The workflow in `.github/workflows/deploy.yml` builds and deploys on each push to `main`. In repository **Settings → Pages → Build and deployment**, select **GitHub Actions** as the source. The public URL is <https://cbear.amoran.io/>. The Vite base path is `/` for this custom domain; change it if the hosting path changes.
 
 ## Daily puzzle contract
 
