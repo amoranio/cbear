@@ -4,6 +4,12 @@
   "image": "scenes/market.jpg",
   "alt": "A busy outdoor market with flower stalls, fruit, shoppers, a bus and a small brown bear wearing a navy scarf.",
   "bear": { "x": 0.263, "y": 0.622, "w": 0.047, "h": 0.12 },
+  "finds": [
+    { "id": "bus", "label": "Red bus", "spoken": "Find the red bus.", "audio": "audio/finds/market-001-bus.wav", "box": { "x": 0.615, "y": 0.165, "w": 0.102, "h": 0.128 } },
+    { "id": "dog", "label": "Dog", "spoken": "Find the dog.", "audio": "audio/finds/market-001-dog.wav", "box": { "x": 0.486, "y": 0.738, "w": 0.11, "h": 0.182 } },
+    { "id": "pram", "label": "Pram", "spoken": "Find the pram.", "audio": "audio/finds/market-001-pram.wav", "box": { "x": 0.542, "y": 0.458, "w": 0.122, "h": 0.267 } },
+    { "id": "can", "label": "Watering can", "spoken": "Find the watering can.", "audio": "audio/finds/market-001-can.wav", "box": { "x": 0.124, "y": 0.79, "w": 0.075, "h": 0.14 } }
+  ],
   "clues": {
     "sounds": { "text": "Listen for s in sunflowers. Look by the flowers.", "spoken": "Listen for the s sound in sunflowers. Look by the flowers.", "focus": "s", "audio": "audio/clues/market-001-sounds.wav" },
     "words": { "text": "Look by the flower pots. Sound out pot.", "spoken": "Look by the flower pots. Sound out pot: p, o, t.", "focus": "pot", "audio": "audio/clues/market-001-words.wav" },

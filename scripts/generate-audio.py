@@ -18,7 +18,12 @@ from piper.config import SynthesisConfig
 
 PROJECT = Path(__file__).resolve().parents[1]
 PUBLIC = PROJECT / "public"
-WORDS = ["pin", "sat", "tap", "nap", "mat", "sad", "ship", "chat", "thin", "sing", "mash", "path"]
+WORDS = [
+    "pin", "pan", "pit", "sat", "sit", "sap", "tap", "tan", "tip",
+    "nap", "nip", "mat", "man", "map", "sad", "ship", "chip",
+    "shin", "chat", "that", "chap", "thin", "than", "sing", "sang",
+    "ding", "mash", "math", "dash", "path", "pat",
+]
 
 
 def generate(voice: PiperVoice, relative_path: str, text: str) -> None:
@@ -41,14 +46,20 @@ def main() -> None:
 
     if args.core:
         for word in WORDS:
-            generate(voice, f"audio/words/{word}.wav", word)
-        generate(voice, "audio/found.wav", "You found Cbear! Brilliant looking and reading!")
+            path = f"audio/words/{word}.wav"
+            if not (PUBLIC / path).exists():
+                generate(voice, path, word)
+        if not (PUBLIC / "audio/found.wav").exists():
+            generate(voice, "audio/found.wav", "You found Cbear! Brilliant looking and reading!")
+        generate(voice, "audio/th-voiced.wav", "th as in this")
 
     if args.manifest:
         puzzle = json.loads(Path(args.manifest).read_text())
         for stage in ("sounds", "words", "digraphs"):
             clue = puzzle["clues"][stage]
             generate(voice, clue["audio"], clue["spoken"])
+        for item in puzzle.get("finds", []):
+            generate(voice, item["audio"], item["spoken"])
 
 
 if __name__ == "__main__":

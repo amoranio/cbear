@@ -4,6 +4,12 @@
   "image": "scenes/seaside.jpg",
   "alt": "A busy British beach with a pier, boats, people, rock pools, beach huts and a small brown bear wearing a navy scarf.",
   "bear": { "x": 0.626, "y": 0.659, "w": 0.03, "h": 0.072 },
+  "finds": [
+    { "id": "boat", "label": "Orange boat", "spoken": "Find the orange boat.", "audio": "audio/finds/seaside-001-boat.wav", "box": { "x": 0.806, "y": 0.163, "w": 0.115, "h": 0.102 } },
+    { "id": "dog", "label": "Black dog", "spoken": "Find the black dog.", "audio": "audio/finds/seaside-001-dog.wav", "box": { "x": 0.625, "y": 0.425, "w": 0.047, "h": 0.052 } },
+    { "id": "castle", "label": "Sandcastle", "spoken": "Find the sandcastle.", "audio": "audio/finds/seaside-001-castle.wav", "box": { "x": 0.449, "y": 0.44, "w": 0.062, "h": 0.069 } },
+    { "id": "hut", "label": "Green hut", "spoken": "Find the green beach hut.", "audio": "audio/finds/seaside-001-hut.wav", "box": { "x": 0.741, "y": 0.556, "w": 0.113, "h": 0.239 } }
+  ],
   "clues": {
     "sounds": { "text": "Listen for s in sand. Look near the sand.", "spoken": "Listen for the s sound in sand. Look near the sand.", "focus": "s", "audio": "audio/clues/seaside-001-sounds.wav" },
     "words": { "text": "Look by a hut. Sound out hut.", "spoken": "Look by a hut. Sound out hut: h, u, t.", "focus": "hut", "audio": "audio/clues/seaside-001-words.wav" },

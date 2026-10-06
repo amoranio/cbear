@@ -4,6 +4,12 @@
   "image": "scenes/station.jpg",
   "alt": "A crowded old railway station with trains, passengers, flowers, luggage and a small brown bear wearing a navy scarf.",
   "bear": { "x": 0.589, "y": 0.489, "w": 0.037, "h": 0.084 },
+  "finds": [
+    { "id": "clock", "label": "Clock", "spoken": "Find the big clock.", "audio": "audio/finds/station-001-clock.wav", "box": { "x": 0.308, "y": 0.002, "w": 0.078, "h": 0.119 } },
+    { "id": "bike", "label": "Bicycle", "spoken": "Find the bicycle in front.", "audio": "audio/finds/station-001-bike.wav", "box": { "x": 0.16, "y": 0.733, "w": 0.229, "h": 0.267 } },
+    { "id": "dog", "label": "Black dog", "spoken": "Find the black dog resting by the bench.", "audio": "audio/finds/station-001-dog.wav", "box": { "x": 0.565, "y": 0.875, "w": 0.151, "h": 0.125 } },
+    { "id": "train", "label": "Blue train", "spoken": "Find the blue train.", "audio": "audio/finds/station-001-train.wav", "box": { "x": 0.647, "y": 0.168, "w": 0.266, "h": 0.133 } }
+  ],
   "clues": {
     "sounds": { "text": "Listen for t in train. Look near the train.", "spoken": "Listen for the t sound in train. Look near the train.", "focus": "t", "audio": "audio/clues/station-001-sounds.wav" },
     "words": { "text": "Look by the bags. Sound out bag.", "spoken": "Look by the bags. Sound out bag: b, a, g.", "focus": "bag", "audio": "audio/clues/station-001-words.wav" },
