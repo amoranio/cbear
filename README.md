@@ -23,6 +23,8 @@ The live puzzle is `public/puzzles/current.json`. A daily update adds a new scen
 
 `#play` opens the gallery. The daily game is `#play/daily`; the eight permanent games have links such as `#play/park` and `#play/parade`. Their order and small preview images are listed in `public/puzzles/levels/index.json`, and each level has its own manifest in that directory. All eight use the daily puzzle schema and the same points, audio, hints, zoom, and finding key. The build validator checks every listed level, asset and target box. Completion is remembered by puzzle ID only for the browser session. Daily bots must not change the catalog or permanent level files.
 
+The three challenge levels can also be opened directly: [museum](https://cbear.amoran.io/#play/museum), [botanical gardens](https://cbear.amoran.io/#play/gardens), and [city parade](https://cbear.amoran.io/#play/parade).
+
 ## Read story
 
 The first book lives in `public/read/story.json`, with its sound map in `src/readStory.ts`. It reuses the Cbear design in a quiet car illustration and moves a beetle between four page positions. Each printed sound button plays a bundled clip; `ar` in *car* stays together, and `y` in *my* uses the /aɪ/ sound. The article *a* has its own unstressed UK sound clip. A separate button narrates each complete line. The current page is remembered only in browser session storage, with no Read points or account.
