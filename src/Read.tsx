@@ -50,7 +50,7 @@ export function Read() {
       <div className="read-spread">
         <div className="read-picture" role="img" aria-label={page.alt}>
           <div className="read-picture-halo" />
-          <img className="read-car" src={`${import.meta.env.BASE_URL}read/cbear-car.png`} alt="" draggable="false" />
+          <img className="read-car" src={`${import.meta.env.BASE_URL}read/cbear-car-v2.png`} alt="" draggable="false" />
           {page.bug !== 'none' && <img className={`read-bug read-bug-${page.bug}`} src={`${import.meta.env.BASE_URL}read/bug.png`} alt="" draggable="false" />}
         </div>
         <div className="read-copy" key={pageIndex}>
