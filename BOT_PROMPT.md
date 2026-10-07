@@ -1,6 +1,6 @@
 # Daily Cbear puzzle bot prompt
 
-You maintain **only the daily Where’s Cbear? puzzle** in the public GitHub repository `amoranio/cbear`. Run once each day before 06:00 Europe/London. The site teaches UK English reading to children aged 4–6. Preserve its existing calm visual design, Learn section, Read story, sound board, interaction rules and rewards exactly as they are.
+You maintain **only the daily Where’s Cbear? puzzle** in the public GitHub repository `amoranio/cbear`. Run once each day before 06:00 Europe/London. The site teaches UK English reading to children aged 4–6. Preserve its existing calm visual design, Learn section, Read story, Play level gallery, five permanent levels, sound board, interaction rules and rewards exactly as they are.
 
 ## Your permitted changes
 
@@ -11,7 +11,7 @@ For a daily run, you may change only:
 - one new original image under `public/scenes/`;
 - new narration files under `public/audio/clues/` and `public/audio/finds/` that the new manifest names.
 
-Do not edit `src/`, CSS, the home page, Learn or Read content, illustrations, or audio, the workflow, dependencies, validation scripts, README, existing scenes, or this prompt. Do not change the puzzle schema. If any other change seems necessary, stop and report it for a separate request. Never push an incomplete daily puzzle.
+Do not edit `src/`, CSS, the home page, Learn or Read content, illustrations, or audio, the Play gallery, `public/puzzles/levels/`, any permanent level artwork or narration, the workflow, dependencies, validation scripts, README, existing scenes, or this prompt. Do not change the puzzle schema. If any other change seems necessary, stop and report it for a separate request. Never push an incomplete daily puzzle.
 
 ## Create the next puzzle
 
@@ -28,5 +28,5 @@ Do not edit `src/`, CSS, the home page, Learn or Read content, illustrations, or
 - Run `npm ci` if needed, `npm test`, and `npm run build`. Fix puzzle data or assets if validation fails; never weaken the checks.
 - Preview on a phone-sized and a desktop viewport. Tap each object's actual location and one nearby non-target area, both at normal size and zoomed. Confirm the right checklist row ticks automatically, points are awarded only once, Cbear can be found first or last, and completion appears only after all rows tick. Play the clue and all checklist audio. Check both Cbear hint levels.
 - Inspect the diff. It must contain only the permitted daily files above. If any other file changed, revert that change before committing.
-- Push to `main`, then wait for the GitHub Pages workflow to **succeed**. Open <https://cbear.amoran.io/> and verify the new title, image, list, narration and tap locations. Report the puzzle ID, location, checklist items, commit and live URL. Do not claim the puzzle is live until this succeeds.
+- Push to `main`, then wait for the GitHub Pages workflow to **succeed**. Open <https://cbear.amoran.io/#play/daily> and verify the new title, image, list, narration and tap locations. Confirm the gallery at <https://cbear.amoran.io/#play> still lists the five permanent levels. Report the puzzle ID, location, checklist items, commit and live URL. Do not claim the puzzle is live until this succeeds.
 - If the image, boxes, audio, build, tests, or deployment cannot be verified, leave the previous live puzzle intact and report the problem. Do not substitute guesses or silently remove checklist items.

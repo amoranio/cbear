@@ -238,3 +238,31 @@ em{font-weight:400;color:#ac694b}
 .read-book-bottom .button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 @media(max-width:900px){.read-spread{grid-template-columns:1fr 1fr;gap:14px}.read-copy{padding-right:0}.read-picture{min-height:310px}.read-sound{min-width:38px;font-size:34px}.read-punctuation{font-size:34px}}
 @media(max-width:700px){.read-page{padding-bottom:65px}.read-intro{padding-bottom:26px}.read-book{padding:17px}.read-book-top{font-size:9px;letter-spacing:.09em}.read-spread{grid-template-columns:1fr;gap:18px}.read-picture{min-height:0}.read-copy{padding:2px 1px 9px}.read-copy h2{font-size:30px}.read-instruction{margin-bottom:15px}.read-line{margin-bottom:18px}.read-sound{min-width:44px;min-height:53px;font-size:34px}.read-punctuation{font-size:34px}.read-book-bottom{margin-top:15px;padding-top:18px;gap:8px}.read-book-bottom .button{min-height:46px;padding:10px;font-size:12px}.read-bug{width:15%}.read-bug-cap{width:12%}}
+
+.play-gallery{padding-bottom:90px}
+.daily-level-card{min-height:270px;display:grid;grid-template-columns:minmax(0,1fr) 280px;overflow:hidden;border:1px solid #cbd8c9;border-radius:10px;background:#e9f0e7;color:#31553e;box-shadow:0 14px 30px #29422d0d;transition:transform .2s,box-shadow .2s}
+.daily-level-card:hover,.level-card:hover{transform:translateY(-3px);box-shadow:0 20px 35px #29422d18}
+.daily-level-copy{padding:31px 34px;display:flex;align-items:flex-start;flex-direction:column}
+.daily-level-copy h2{font-size:36px;margin:10px 0 5px}
+.daily-level-copy p{font-size:14px;color:#718573;margin:0 0 18px}
+.level-card-progress{display:inline-flex;align-items:center;min-height:30px;padding:5px 10px;background:#f8faf4;border:1px solid #d5dfd0;border-radius:20px;color:#4d7056;font-size:11px;font-weight:800}
+.level-card-action{display:inline-flex;align-items:center;gap:8px;margin-top:auto;padding-top:14px;font-size:13px;font-weight:800;color:#315f43}
+.level-card-action svg,.level-card-arrow svg{width:17px;height:17px}
+.daily-level-art{position:relative;display:grid;place-items:end center;min-height:260px;overflow:hidden}
+.daily-level-orbit{position:absolute;width:270px;height:270px;border-radius:50%;background:#d4e1ce;right:-30px;top:15px}
+.daily-level-art img{position:relative;height:250px;width:auto;object-fit:contain;object-position:bottom}
+.level-section-heading{display:flex;justify-content:space-between;align-items:end;gap:25px;margin:50px 0 22px}
+.level-section-heading h2{font-size:34px;margin:7px 0 0}
+.level-section-heading p{max-width:280px;margin:0;color:#819082;font-size:13px;line-height:1.5}
+.level-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.level-card{min-width:0;overflow:hidden;display:flex;flex-direction:column;background:#fffef9;border:1px solid #dedfd4;border-radius:9px;color:#31533c;box-shadow:0 11px 26px #29422d0a;transition:transform .2s,box-shadow .2s}
+.level-card>img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block}
+.level-card-body{padding:19px 19px 18px;display:flex;flex-direction:column;flex:1}
+.level-card-body h3{font-size:25px;margin:7px 0 6px}
+.level-card-body p{color:#7b8a7b;font-size:12px;line-height:1.5;margin:0 0 22px}
+.level-card-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.level-card-arrow{color:#446d52}
+.all-levels-link{display:inline-flex;align-items:center;margin-top:25px;color:#4c7558;font-size:12px;font-weight:800}
+.play-page>.play-intro{padding-top:24px}
+@media(max-width:900px){.level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.play-gallery{padding-bottom:65px}.daily-level-card{grid-template-columns:minmax(0,1fr) 105px;min-height:230px}.daily-level-copy{padding:23px 16px}.daily-level-copy h2{font-size:28px}.daily-level-art{min-height:230px}.daily-level-orbit{width:190px;height:190px;right:-95px;top:27px}.daily-level-art img{height:165px;max-width:none;transform:translateX(-1px)}.level-section-heading{display:block;margin:42px 0 17px}.level-section-heading h2{font-size:31px}.level-section-heading p{margin-top:8px}.level-grid{grid-template-columns:1fr;gap:14px}.level-card{display:grid;grid-template-columns:38% minmax(0,1fr);min-height:153px}.level-card>img{height:100%;aspect-ratio:auto}.level-card-body{padding:15px}.level-card-body h3{font-size:22px}.level-card-body p{margin-bottom:11px}.level-card-progress{font-size:10px}.all-levels-link{margin-top:18px}.play-page>.play-intro{padding-top:19px}}

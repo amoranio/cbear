@@ -6,6 +6,28 @@ const archive = join(root, 'puzzles/archive');
 const files = ['puzzles/current.json', 'puzzles/seaside.sample.json', 'puzzles/station.sample.json'];
 if (existsSync(archive)) files.push(...readdirSync(archive).filter(name => name.endsWith('.json')).map(name => `puzzles/archive/${name}`));
 let failed = false;
+const puzzleIds = new Set();
+
+try {
+  const catalog = JSON.parse(readFileSync(join(root, 'puzzles/levels/index.json'), 'utf8'));
+  if (!Array.isArray(catalog.levels) || catalog.levels.length !== 5) throw new Error('the level catalog must list five games');
+  const slugs = new Set();
+  for (const level of catalog.levels) {
+    if (typeof level.slug !== 'string' || !/^[a-z0-9-]+$/.test(level.slug) || slugs.has(level.slug) ||
+        level.manifest !== `puzzles/levels/${level.slug}.json` ||
+        level.thumbnail !== `scenes/level-${level.slug}-thumb.jpg` ||
+        typeof level.caption !== 'string' || !level.caption.trim() ||
+        !existsSync(join(root, level.manifest)) || !existsSync(join(root, level.thumbnail))) {
+      throw new Error(`invalid level entry: ${level?.slug ?? 'unknown'}`);
+    }
+    slugs.add(level.slug);
+    files.push(level.manifest);
+  }
+  console.log('✓ puzzles/levels/index.json');
+} catch (error) {
+  failed = true;
+  console.error(`✗ puzzles/levels/index.json: ${error.message}`);
+}
 
 const validBox = box => box && ['x', 'y', 'w', 'h'].every(key => Number.isFinite(box[key])) &&
   box.x >= 0 && box.y >= 0 && box.w > 0 && box.h > 0 && box.x + box.w <= 1 && box.y + box.h <= 1;
@@ -25,6 +47,11 @@ for (const file of files) {
     if (!validText || !/^[a-z0-9-]+$/.test(data.id) || !validImage || !validBox(data.bear) || !validClues) {
       throw new Error('invalid puzzle details, bear box, scene image, or reading clues');
     }
+    if (file.startsWith('puzzles/levels/') && data.id !== `level-${file.split('/').at(-1).replace('.json', '')}`) {
+      throw new Error('level ID does not match catalog slug');
+    }
+    if (puzzleIds.has(data.id) && !file.startsWith('puzzles/archive/')) throw new Error('duplicate puzzle ID');
+    puzzleIds.add(data.id);
     if (!Array.isArray(data.finds) || data.finds.length < 4 || data.finds.length > 5) {
       throw new Error('add four or five extra finding items');
     }

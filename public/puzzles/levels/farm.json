@@ -1,0 +1,19 @@
+{
+  "id": "level-farm",
+  "title": "The farm",
+  "image": "scenes/level-farm.jpg",
+  "alt": "A lively farmyard with a tractor, pig, hen, chicks, hay bales and Cbear in his navy scarf by the chick pen.",
+  "bear": { "x": 0.916, "y": 0.52, "w": 0.054, "h": 0.158 },
+  "finds": [
+    { "id": "pig", "label": "Pig", "spoken": "Find the pig in the pen.", "audio": "audio/finds/level-farm-pig.wav", "box": { "x": 0.001, "y": 0.608, "w": 0.203, "h": 0.226 } },
+    { "id": "hen", "label": "Hen", "spoken": "Find the hen in the coop.", "audio": "audio/finds/level-farm-hen.wav", "box": { "x": 0.498, "y": 0.257, "w": 0.066, "h": 0.092 } },
+    { "id": "bucket", "label": "Big bucket", "spoken": "Find the big bucket in front of the fence.", "audio": "audio/finds/level-farm-bucket.wav", "box": { "x": 0.496, "y": 0.747, "w": 0.104, "h": 0.153 } },
+    { "id": "tractor", "label": "Red tractor", "spoken": "Find the red tractor behind the wall.", "audio": "audio/finds/level-farm-tractor.wav", "box": { "x": 0.06, "y": 0.139, "w": 0.124, "h": 0.116 } }
+  ],
+  "clues": {
+    "sounds": { "text": "Listen for h in hay. Look by the hay.", "spoken": "Listen for the h sound in hay. Look by the hay.", "focus": "h", "audio": "audio/clues/level-farm-sounds.wav" },
+    "words": { "text": "Look by the pen. Sound out pen.", "spoken": "Look by the pen. Sound out pen: p, e, n.", "focus": "pen", "audio": "audio/clues/level-farm-words.wav" },
+    "digraphs": { "text": "Search by the chicks. Listen for ch in chicks.", "spoken": "Search by the chicks. Listen for ch in chicks.", "focus": "chicks", "audio": "audio/clues/level-farm-digraphs.wav" }
+  },
+  "hint": "Look beside the hay bale to the right of the chick pen."
+}

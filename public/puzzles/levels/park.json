@@ -1,0 +1,19 @@
+{
+  "id": "level-park",
+  "title": "The park",
+  "image": "scenes/level-park.jpg",
+  "alt": "A busy autumn park with families, a pond, paths, flowers and Cbear in his navy scarf near a log and bush.",
+  "bear": { "x": 0.173, "y": 0.603, "w": 0.059, "h": 0.216 },
+  "finds": [
+    { "id": "ball", "label": "Red ball", "spoken": "Find the red ball on the grass.", "audio": "audio/finds/level-park-ball.wav", "box": { "x": 0.871, "y": 0.749, "w": 0.055, "h": 0.062 } },
+    { "id": "kite", "label": "Kite", "spoken": "Find the kite in the sky.", "audio": "audio/finds/level-park-kite.wav", "box": { "x": 0.853, "y": 0.013, "w": 0.083, "h": 0.108 } },
+    { "id": "dog", "label": "Dog", "spoken": "Find the dog on the path.", "audio": "audio/finds/level-park-dog.wav", "box": { "x": 0.451, "y": 0.531, "w": 0.095, "h": 0.14 } },
+    { "id": "bike", "label": "Bicycle", "spoken": "Find the bicycle by the bench.", "audio": "audio/finds/level-park-bike.wav", "box": { "x": 0.053, "y": 0.39, "w": 0.083, "h": 0.155 } }
+  ],
+  "clues": {
+    "sounds": { "text": "Listen for l in log. Look beside the log.", "spoken": "Listen for the l sound in log. Look beside the log.", "focus": "l", "audio": "audio/clues/level-park-sounds.wav" },
+    "words": { "text": "Look by the log. Sound out log.", "spoken": "Look by the log. Sound out log: l, o, g.", "focus": "log", "audio": "audio/clues/level-park-words.wav" },
+    "digraphs": { "text": "Search the bush. Listen for sh in bush.", "spoken": "Search the bush. Listen for sh in bush.", "focus": "bush", "audio": "audio/clues/level-park-digraphs.wav" }
+  },
+  "hint": "Look low down beside the log and the leafy bush."
+}

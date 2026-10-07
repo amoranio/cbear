@@ -1,0 +1,9 @@
+{
+  "levels": [
+    { "slug": "park", "manifest": "puzzles/levels/park.json", "thumbnail": "scenes/level-park-thumb.jpg", "caption": "A first search among the trees." },
+    { "slug": "farm", "manifest": "puzzles/levels/farm.json", "thumbnail": "scenes/level-farm-thumb.jpg", "caption": "Look around the busy farmyard." },
+    { "slug": "harbour", "manifest": "puzzles/levels/harbour.json", "thumbnail": "scenes/level-harbour-thumb.jpg", "caption": "Explore the boats and the quay." },
+    { "slug": "fair", "manifest": "puzzles/levels/fair.json", "thumbnail": "scenes/level-fair-thumb.jpg", "caption": "Spot the little things at the fair." },
+    { "slug": "castle", "manifest": "puzzles/levels/castle.json", "thumbnail": "scenes/level-castle-thumb.jpg", "caption": "Look closely in the crowded courtyard." }
+  ]
+}

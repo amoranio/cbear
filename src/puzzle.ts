@@ -13,6 +13,13 @@ export type Puzzle = {
   hint: string;
 };
 
+export type LevelEntry = {
+  slug: string;
+  manifest: string;
+  thumbnail: string;
+  caption: string;
+};
+
 const stages: StageId[] = ['sounds', 'words', 'digraphs'];
 const itemAudio = /^audio\/finds\/[a-z0-9-]+\.wav$/;
 
@@ -75,10 +82,47 @@ export function bearQuadrant(puzzle: Puzzle): string {
 }
 
 export async function loadCurrentPuzzle(): Promise<Puzzle> {
-  const url = `${import.meta.env.BASE_URL}puzzles/current.json?v=${Date.now()}`;
-  const response = await fetch(url, { cache: 'no-store' });
-  if (!response.ok) throw new Error('The current puzzle could not load.');
+  return loadPuzzleFile('puzzles/current.json', true);
+}
+
+export function isLevelCatalog(value: unknown): value is { levels: LevelEntry[] } {
+  if (!value || typeof value !== 'object') return false;
+  const levels = (value as { levels?: unknown }).levels;
+  if (!Array.isArray(levels) || levels.length !== 5) return false;
+  const seen = new Set<string>();
+  return levels.every(item => {
+    if (!item || typeof item !== 'object') return false;
+    const entry = item as Partial<LevelEntry>;
+    if (typeof entry.slug !== 'string' || !/^[a-z0-9-]+$/.test(entry.slug) || seen.has(entry.slug)) return false;
+    if (entry.manifest !== `puzzles/levels/${entry.slug}.json` || entry.thumbnail !== `scenes/level-${entry.slug}-thumb.jpg`) return false;
+    if (typeof entry.caption !== 'string' || !entry.caption.trim()) return false;
+    seen.add(entry.slug);
+    return true;
+  });
+}
+
+export async function loadLevelCatalog(): Promise<LevelEntry[]> {
+  const response = await fetch(`${import.meta.env.BASE_URL}puzzles/levels/index.json`);
+  if (!response.ok) throw new Error('The levels could not load.');
   const value: unknown = await response.json();
-  if (!isPuzzle(value)) throw new Error('The current puzzle has invalid details.');
+  if (!isLevelCatalog(value)) throw new Error('The level list has invalid details.');
+  return value.levels;
+}
+
+export async function loadLevelPuzzle(slug: string): Promise<Puzzle> {
+  const levels = await loadLevelCatalog();
+  const level = levels.find(entry => entry.slug === slug);
+  if (!level) throw new Error('That level was not found.');
+  const puzzle = await loadPuzzleFile(level.manifest);
+  if (puzzle.id !== `level-${slug}`) throw new Error('This level has invalid details.');
+  return puzzle;
+}
+
+export async function loadPuzzleFile(path: string, fresh = false): Promise<Puzzle> {
+  const url = `${import.meta.env.BASE_URL}${path}${fresh ? `?v=${Date.now()}` : ''}`;
+  const response = await fetch(url, fresh ? { cache: 'no-store' } : undefined);
+  if (!response.ok) throw new Error('The puzzle could not load.');
+  const value: unknown = await response.json();
+  if (!isPuzzle(value)) throw new Error('The puzzle has invalid details.');
   return value;
 }

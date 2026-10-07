@@ -4,11 +4,17 @@ import { useState } from 'react';
 import { existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import current from '../public/puzzles/current.json';
-import { Learn, Play } from '../src/main';
+import catalog from '../public/puzzles/levels/index.json';
+import park from '../public/puzzles/levels/park.json';
+import farm from '../public/puzzles/levels/farm.json';
+import harbour from '../public/puzzles/levels/harbour.json';
+import fair from '../public/puzzles/levels/fair.json';
+import castle from '../public/puzzles/levels/castle.json';
+import { App, Learn, Play, PlayGallery } from '../src/main';
 import { Read } from '../src/Read';
 import { playClip, playPhoneme } from '../src/audio';
 import { awardTarget, type Session } from '../src/progress';
-import { isPuzzle, targetAtPoint, type Puzzle } from '../src/puzzle';
+import { isLevelCatalog, isPuzzle, targetAtPoint, type Puzzle } from '../src/puzzle';
 import { readStory, soundsForWord } from '../src/readStory';
 
 vi.mock('../src/audio', () => ({
@@ -18,7 +24,19 @@ vi.mock('../src/audio', () => ({
 }));
 
 const puzzle = current as Puzzle;
+const levelPuzzles = { park, farm, harbour, fair, castle } as const;
 const freshSession = (): Session => ({ stage: 'sounds', points: 0, found: [], foundItems: {} });
+
+function mockAllPuzzles() {
+  globalThis.fetch = vi.fn(async input => {
+    const url = String(input);
+    if (url.includes('levels/index.json')) return { ok: true, json: async () => catalog } as Response;
+    for (const [slug, scene] of Object.entries(levelPuzzles)) {
+      if (url.includes(`levels/${slug}.json`)) return { ok: true, json: async () => scene } as Response;
+    }
+    return { ok: true, json: async () => current } as Response;
+  }) as typeof fetch;
+}
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -151,5 +169,53 @@ describe('Play', () => {
     expect(screen.getByTestId('points').textContent).toBe('40');
     expect(screen.getByText('5 / 5 found')).toBeTruthy();
     expect(screen.getByText('You found everything!')).toBeTruthy();
+  });
+
+  it('validates all five selectable levels and their bundled files', () => {
+    expect(isLevelCatalog(catalog)).toBe(true);
+    const ids = new Set<string>();
+    for (const entry of catalog.levels) {
+      const scene = levelPuzzles[entry.slug as keyof typeof levelPuzzles];
+      expect(isPuzzle(scene)).toBe(true);
+      expect(scene.id).toBe(`level-${entry.slug}`);
+      expect(ids.has(scene.id)).toBe(false);
+      ids.add(scene.id);
+      for (const path of [scene.image, entry.thumbnail, ...Object.values(scene.clues).map(clue => clue.audio), ...scene.finds.map(item => item.audio)]) {
+        const file = join(process.cwd(), 'public', path);
+        expect(existsSync(file) && statSync(file).size > 44).toBe(true);
+      }
+      expect(targetAtPoint(scene, scene.bear.x + scene.bear.w / 2, scene.bear.y + scene.bear.h / 2)).toBe('cbear');
+      for (const item of scene.finds) expect(targetAtPoint(scene, item.box.x + item.box.w / 2, item.box.y + item.box.h / 2)).toBe(item.id);
+    }
+  });
+
+  it('shows an open level gallery and keeps progress separate for each game', async () => {
+    mockAllPuzzles();
+    const session = awardTarget(awardTarget(freshSession(), 'level-park', 'cbear'), 'level-park', 'ball');
+    render(<PlayGallery session={session} />);
+    expect(await screen.findByText('The castle courtyard')).toBeTruthy();
+    expect(screen.getByRole('link', { name: /The park/ }).getAttribute('href')).toBe('#play/park');
+    expect(screen.getByRole('link', { name: /The castle courtyard/ }).getAttribute('href')).toBe('#play/castle');
+    expect(screen.getByText('2 / 5 found')).toBeTruthy();
+    expect(screen.getAllByText('0 / 5 found').length).toBeGreaterThan(0);
+    expect(awardTarget(session, 'level-park', 'cbear').points).toBe(25);
+    expect(awardTarget(session, 'level-farm', 'cbear').points).toBe(45);
+  });
+
+  it('opens a direct level link and offers a route back to all levels', async () => {
+    mockAllPuzzles();
+    location.hash = '#play/farm';
+    render(<App />);
+    expect(await screen.findByRole('img', { name: /lively farmyard/i })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /All levels/ }).getAttribute('href')).toBe('#play');
+    expect(screen.getByText('The farm')).toBeTruthy();
+    location.hash = '';
+  });
+
+  it('shows a recoverable error for an unknown level', async () => {
+    mockAllPuzzles();
+    render(<Play slug="missing" stage="sounds" session={freshSession()} markTarget={vi.fn()} />);
+    expect(await screen.findByRole('alert')).toHaveProperty('textContent', expect.stringContaining('That level was not found.'));
+    expect(screen.getByRole('link', { name: /All levels/ })).toBeTruthy();
   });
 });

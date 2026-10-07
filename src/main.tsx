@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { playClip, playPhoneme } from './audio';
 import { lessons, stageDescriptions, stageNames, stageOrder, type Card } from './lessons';
-import { bearQuadrant, loadCurrentPuzzle, targetAtPoint, type Puzzle, type StageId } from './puzzle';
+import { bearQuadrant, loadCurrentPuzzle, loadLevelCatalog, loadLevelPuzzle, loadPuzzleFile, targetAtPoint, type LevelEntry, type Puzzle, type StageId } from './puzzle';
 import { awardTarget, targetIsFound, type Session } from './progress';
 import { soundGroups } from './soundBoard';
 import { Read } from './Read';
@@ -26,8 +26,12 @@ function readSession(): Session {
   return { stage: 'sounds', points: 0, found: [], foundItems: {} };
 }
 
-function pageFromHash(): Page {
-  return location.hash === '#learn' ? 'learn' : location.hash === '#read' ? 'read' : location.hash === '#play' ? 'play' : 'home';
+function pageFromHash(hash: string): Page {
+  return hash === '#learn' ? 'learn' : hash === '#read' ? 'read' : hash.startsWith('#play') ? 'play' : 'home';
+}
+
+function playSlugFromHash(hash: string): string | null {
+  return hash === '#play' ? null : /^#play\/([a-z0-9-]+)$/.exec(hash)?.[1] ?? null;
 }
 
 function SpeakerIcon() {
@@ -42,12 +46,14 @@ function SearchIcon() {
   return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>;
 }
 
-function App() {
-  const [page, setPage] = useState<Page>(pageFromHash);
+export function App() {
+  const [route, setRoute] = useState(location.hash);
   const [session, setSession] = useState<Session>(readSession);
+  const page = pageFromHash(route);
+  const playSlug = playSlugFromHash(route);
 
   useEffect(() => {
-    const onHash = () => setPage(pageFromHash());
+    const onHash = () => setRoute(location.hash);
     addEventListener('hashchange', onHash);
     return () => removeEventListener('hashchange', onHash);
   }, []);
@@ -72,7 +78,7 @@ function App() {
       {page === 'home' && <Home />}
       {page === 'learn' && <Learn stage={session.stage} setStage={setStage} addPoints={addPoints} />}
       {page === 'read' && <Read />}
-      {page === 'play' && <Play stage={session.stage} session={session} markTarget={markTarget} />}
+      {page === 'play' && (playSlug === null ? <PlayGallery session={session} /> : <Play key={playSlug} slug={playSlug} stage={session.stage} session={session} markTarget={markTarget} />)}
     </main>
 
     <footer className="site-footer"><span>Little steps. Big discoveries.</span><span>Made for curious readers · UK English</span></footer>
@@ -182,7 +188,48 @@ export function Learn({ stage, setStage, addPoints }: { stage: StageId; setStage
   </div>;
 }
 
-export function Play({ stage, session, markTarget }: { stage: StageId; session: Session; markTarget: (puzzleId: string, targetId: string) => void }) {
+type GalleryLevel = { entry: LevelEntry; puzzle: Puzzle | null };
+
+function countFound(session: Session, puzzle: Puzzle): number {
+  return puzzle.finds.filter(item => targetIsFound(session, puzzle.id, item.id)).length + (targetIsFound(session, puzzle.id, 'cbear') ? 1 : 0);
+}
+
+export function PlayGallery({ session }: { session: Session }) {
+  const [daily, setDaily] = useState<Puzzle | null>(null);
+  const [levels, setLevels] = useState<GalleryLevel[] | null>(null);
+  const [error, setError] = useState('');
+  const [retry, setRetry] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    loadCurrentPuzzle().then(puzzle => { if (active) setDaily(puzzle); }).catch(() => { /* The daily card still opens its own error view. */ });
+    loadLevelCatalog().then(async entries => {
+      const cards = await Promise.all(entries.map(async entry => {
+        try { return { entry, puzzle: await loadPuzzleFile(entry.manifest) }; }
+        catch { return { entry, puzzle: null }; }
+      }));
+      if (active) setLevels(cards);
+    }).catch(() => { if (active) setError('The level list could not load.'); });
+    return () => { active = false; };
+  }, [retry]);
+
+  return <div className="play-gallery container">
+    <div className="page-intro play-intro"><span className="section-kicker">FIND YOUR NEXT SEARCH</span><h1>Where’s <em>Cbear?</em></h1><p>Choose a picture, read the clue, and find Cbear and the things in your key. Play any level you like.</p></div>
+    <a className="daily-level-card" href="#play/daily">
+      <div className="daily-level-copy"><span className="mini-kicker">TODAY’S SEARCH</span><h2>{daily?.title ?? 'A new place to explore'}</h2><p>A fresh Where’s Cbear? picture each day.</p><span className="level-card-progress">{daily ? `${countFound(session, daily)} / ${daily.finds.length + 1} found` : 'Open today’s game'}</span><span className="level-card-action">Play today <ArrowIcon /></span></div>
+      <div className="daily-level-art" aria-hidden="true"><span className="daily-level-orbit" /><img src={`${import.meta.env.BASE_URL}cbear.png`} alt="" /></div>
+    </a>
+    <div className="level-section-heading"><div><span className="section-kicker">FIVE PLACES TO EXPLORE</span><h2>Pick a level</h2></div><p>Start anywhere. The pictures grow a little busier as you go.</p></div>
+    {error && <div className="error-card" role="alert"><p>{error}</p><button className="button button-quiet" onClick={() => { setError(''); setRetry(value => value + 1); }}>Try again</button></div>}
+    {!error && !levels && <div className="loading-card">Preparing the levels…</div>}
+    {levels && <div className="level-grid">{levels.map(({ entry, puzzle }, index) => <a className="level-card" href={`#play/${entry.slug}`} key={entry.slug}>
+      <img src={`${import.meta.env.BASE_URL}${entry.thumbnail}`} alt="" loading="lazy" />
+      <div className="level-card-body"><span className="mini-kicker">LEVEL {String(index + 1).padStart(2, '0')}</span><h3>{puzzle?.title ?? entry.slug}</h3><p>{entry.caption}</p><div className="level-card-foot"><span className="level-card-progress">{puzzle ? `${countFound(session, puzzle)} / ${puzzle.finds.length + 1} found` : 'Open level'}</span><span className="level-card-arrow" aria-hidden="true"><ArrowIcon /></span></div></div>
+    </a>)}</div>}
+  </div>;
+}
+
+export function Play({ stage, session, markTarget, slug = 'daily' }: { stage: StageId; session: Session; markTarget: (puzzleId: string, targetId: string) => void; slug?: string }) {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [error, setError] = useState('');
   const [attempts, setAttempts] = useState(0);
@@ -193,8 +240,10 @@ export function Play({ stage, session, markTarget }: { stage: StageId; session: 
   const [audioIssue, setAudioIssue] = useState(false);
 
   useEffect(() => {
-    loadCurrentPuzzle().then(setPuzzle).catch((cause: Error) => setError(cause.message));
-  }, []);
+    let active = true;
+    (slug === 'daily' ? loadCurrentPuzzle() : loadLevelPuzzle(slug)).then(value => { if (active) setPuzzle(value); }).catch((cause: Error) => { if (active) setError(cause.message); });
+    return () => { active = false; };
+  }, [slug]);
 
   const bearFound = puzzle ? targetIsFound(session, puzzle.id, 'cbear') : false;
   const foundItems = puzzle ? puzzle.finds.filter(item => targetIsFound(session, puzzle.id, item.id)) : [];
@@ -234,11 +283,12 @@ export function Play({ stage, session, markTarget }: { stage: StageId; session: 
   const [vertical, horizontal] = quadrant.split(' ');
 
   return <div className="play-page container">
-    <div className="page-intro play-intro"><span className="section-kicker">THE DAILY SEARCH</span><h1>Where’s <em>Cbear?</em></h1><p>Read the clue, explore the picture, and tap Cbear when you spot that navy scarf.</p></div>
+    <a className="all-levels-link" href="#play">← All levels</a>
+    <div className="page-intro play-intro"><span className="section-kicker">{slug === 'daily' ? 'THE DAILY SEARCH' : 'A CBEAR LEVEL'}</span><h1>Where’s <em>Cbear?</em></h1><p>Read the clue, explore the picture, and tap Cbear when you spot that navy scarf.</p></div>
     {error && <div className="error-card" role="alert"><h2>The scene is taking a break.</h2><p>{error}</p><button className="button button-primary" onClick={() => location.reload()}>Try again</button></div>}
-    {!error && !puzzle && <div className="loading-card">Preparing today’s scene…</div>}
+    {!error && !puzzle && <div className="loading-card">Preparing the scene…</div>}
     {puzzle && <>
-      <div className="puzzle-info"><div><span className="mini-kicker">TODAY’S PLACE</span><h2>{puzzle.title}</h2></div><span className="puzzle-badge"><SearchIcon /> A Cbear search</span></div>
+      <div className="puzzle-info"><div><span className="mini-kicker">{slug === 'daily' ? 'TODAY’S PLACE' : 'YOUR PLACE'}</span><h2>{puzzle.title}</h2></div><span className="puzzle-badge"><SearchIcon /> A Cbear search</span></div>
       <section className="clue-card" aria-label="Reading clue"><div className="clue-label">01 / READ THE CLUE</div><div className="clue-main"><div><p>{clue?.text}</p><span className="clue-focus">Sound to notice: <strong>{clue?.focus}</strong></span></div><button className="button button-audio" onClick={playClue}><SpeakerIcon /> Listen to clue</button></div>{audioIssue && <p className="audio-message">Audio could not play. The words are still here to read.</p>}</section>
       <div className="search-layout">
         <div className="scene-column">

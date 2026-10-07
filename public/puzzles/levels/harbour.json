@@ -1,0 +1,19 @@
+{
+  "id": "level-harbour",
+  "title": "The harbour",
+  "image": "scenes/level-harbour.jpg",
+  "alt": "A busy harbour with fishing boats, nets, crates, a crab, people and Cbear in his navy scarf by the net shed.",
+  "bear": { "x": 0.151, "y": 0.43, "w": 0.058, "h": 0.146 },
+  "finds": [
+    { "id": "boat", "label": "Blue boat", "spoken": "Find the blue boat on the water.", "audio": "audio/finds/level-harbour-boat.wav", "box": { "x": 0.798, "y": 0.326, "w": 0.17, "h": 0.151 } },
+    { "id": "crab", "label": "Crab", "spoken": "Find the crab on the rocks.", "audio": "audio/finds/level-harbour-crab.wav", "box": { "x": 0.122, "y": 0.832, "w": 0.087, "h": 0.065 } },
+    { "id": "flag", "label": "Red flag", "spoken": "Find the red flag high on the mast.", "audio": "audio/finds/level-harbour-flag.wav", "box": { "x": 0.473, "y": 0.034, "w": 0.044, "h": 0.06 } },
+    { "id": "net", "label": "Fishing net", "spoken": "Find the fishing net by the crates at the front.", "audio": "audio/finds/level-harbour-net.wav", "box": { "x": 0.815, "y": 0.783, "w": 0.172, "h": 0.207 } }
+  ],
+  "clues": {
+    "sounds": { "text": "Listen for n in net. Look by the nets.", "spoken": "Listen for the n sound in net. Look by the nets.", "focus": "n", "audio": "audio/clues/level-harbour-sounds.wav" },
+    "words": { "text": "Look by the net. Sound out net.", "spoken": "Look by the net. Sound out net: n, e, t.", "focus": "net", "audio": "audio/clues/level-harbour-words.wav" },
+    "digraphs": { "text": "Check the shed. Listen for sh in shed.", "spoken": "Check the shed. Listen for sh in shed.", "focus": "shed", "audio": "audio/clues/level-harbour-digraphs.wav" }
+  },
+  "hint": "Search at the left edge of the quay, beside the net shed."
+}

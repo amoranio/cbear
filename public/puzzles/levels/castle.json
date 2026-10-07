@@ -1,0 +1,20 @@
+{
+  "id": "level-castle",
+  "title": "The castle courtyard",
+  "image": "scenes/level-castle.jpg",
+  "alt": "A crowded castle courtyard with displays, banners, a shield, map, crown, lantern and Cbear in his navy scarf under the stone arch.",
+  "bear": { "x": 0.129, "y": 0.508, "w": 0.062, "h": 0.14 },
+  "finds": [
+    { "id": "shield", "label": "Blue shield", "spoken": "Find the blue shield under the arch.", "audio": "audio/finds/level-castle-shield.wav", "box": { "x": 0.062, "y": 0.348, "w": 0.063, "h": 0.25 } },
+    { "id": "key", "label": "Gold key", "spoken": "Find the gold key on the table at the front.", "audio": "audio/finds/level-castle-key.wav", "box": { "x": 0.782, "y": 0.883, "w": 0.07, "h": 0.059 } },
+    { "id": "map", "label": "Map", "spoken": "Find the map on the stand under the arch.", "audio": "audio/finds/level-castle-map.wav", "box": { "x": 0.141, "y": 0.386, "w": 0.105, "h": 0.122 } },
+    { "id": "lantern", "label": "Lantern", "spoken": "Find the lantern hanging at the top right.", "audio": "audio/finds/level-castle-lantern.wav", "box": { "x": 0.923, "y": 0.0, "w": 0.06, "h": 0.16 } },
+    { "id": "crown", "label": "Crown", "spoken": "Find the crown in the glass case.", "audio": "audio/finds/level-castle-crown.wav", "box": { "x": 0.624, "y": 0.493, "w": 0.058, "h": 0.097 } }
+  ],
+  "clues": {
+    "sounds": { "text": "Listen for m in map. Look by the map.", "spoken": "Listen for the m sound in map. Look by the map.", "focus": "m", "audio": "audio/clues/level-castle-sounds.wav" },
+    "words": { "text": "Look by the map. Sound out map.", "spoken": "Look by the map. Sound out map: m, a, p.", "focus": "map", "audio": "audio/clues/level-castle-words.wav" },
+    "digraphs": { "text": "Search the shield. Listen for sh in shield.", "spoken": "Search the shield. Listen for sh in shield.", "focus": "shield", "audio": "audio/clues/level-castle-digraphs.wav" }
+  },
+  "hint": "Look low down beneath the stone arch, near the map stand."
+}
