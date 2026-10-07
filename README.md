@@ -1,6 +1,6 @@
 # Cbear — Learn, Read & Play
 
-A small, responsive reading site for early readers. **Learn** teaches UK letter sounds, blending and common digraphs through short cards and offers a Phase 2–3 sound library. Children can hear every answer before checking it. **Read** is a four-page illustrated story whose printed sounds play when tapped. **Play** offers a daily search and five selectable, gradually busier levels, each pairing reading clues with a detailed search for Cbear and other objects. The site is static and uses no accounts or tracking. Points and progress last only for the browser session.
+A small, responsive reading site for early readers. **Learn** teaches UK letter sounds, blending and common digraphs through short cards and offers a Phase 2–3 sound library. Children can hear every answer before checking it. **Read** is a four-page illustrated story whose printed sounds play when tapped. **Play** offers a daily search and eight selectable levels, with the final three adding much busier visual searches while keeping the reading approachable. The site is static and uses no accounts or tracking. Points and progress last only for the browser session.
 
 ## Run locally
 
@@ -21,7 +21,7 @@ The live puzzle is `public/puzzles/current.json`. A daily update adds a new scen
 
 ## Permanent Play levels
 
-`#play` opens the gallery. The daily game is `#play/daily`; the five permanent games have links such as `#play/park`. Their order and small preview images are listed in `public/puzzles/levels/index.json`, and each level has its own manifest in that directory. All five use the daily puzzle schema and the same points, audio, hints, zoom, and finding key. The build validator checks every listed level, asset and target box. Completion is remembered by puzzle ID only for the browser session. Daily bots must not change the catalog or permanent level files.
+`#play` opens the gallery. The daily game is `#play/daily`; the eight permanent games have links such as `#play/park` and `#play/parade`. Their order and small preview images are listed in `public/puzzles/levels/index.json`, and each level has its own manifest in that directory. All eight use the daily puzzle schema and the same points, audio, hints, zoom, and finding key. The build validator checks every listed level, asset and target box. Completion is remembered by puzzle ID only for the browser session. Daily bots must not change the catalog or permanent level files.
 
 ## Read story
 

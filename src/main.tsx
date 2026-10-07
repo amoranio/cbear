@@ -219,12 +219,12 @@ export function PlayGallery({ session }: { session: Session }) {
       <div className="daily-level-copy"><span className="mini-kicker">TODAY’S SEARCH</span><h2>{daily?.title ?? 'A new place to explore'}</h2><p>A fresh Where’s Cbear? picture each day.</p><span className="level-card-progress">{daily ? `${countFound(session, daily)} / ${daily.finds.length + 1} found` : 'Open today’s game'}</span><span className="level-card-action">Play today <ArrowIcon /></span></div>
       <div className="daily-level-art" aria-hidden="true"><span className="daily-level-orbit" /><img src={`${import.meta.env.BASE_URL}cbear.png`} alt="" /></div>
     </a>
-    <div className="level-section-heading"><div><span className="section-kicker">FIVE PLACES TO EXPLORE</span><h2>Pick a level</h2></div><p>Start anywhere. The pictures grow a little busier as you go.</p></div>
+    <div className="level-section-heading"><div><span className="section-kicker">EIGHT PLACES TO EXPLORE</span><h2>Pick a level</h2></div><p>Start anywhere. Levels 6–8 offer a bigger search challenge.</p></div>
     {error && <div className="error-card" role="alert"><p>{error}</p><button className="button button-quiet" onClick={() => { setError(''); setRetry(value => value + 1); }}>Try again</button></div>}
     {!error && !levels && <div className="loading-card">Preparing the levels…</div>}
     {levels && <div className="level-grid">{levels.map(({ entry, puzzle }, index) => <a className="level-card" href={`#play/${entry.slug}`} key={entry.slug}>
       <img src={`${import.meta.env.BASE_URL}${entry.thumbnail}`} alt="" loading="lazy" />
-      <div className="level-card-body"><span className="mini-kicker">LEVEL {String(index + 1).padStart(2, '0')}</span><h3>{puzzle?.title ?? entry.slug}</h3><p>{entry.caption}</p><div className="level-card-foot"><span className="level-card-progress">{puzzle ? `${countFound(session, puzzle)} / ${puzzle.finds.length + 1} found` : 'Open level'}</span><span className="level-card-arrow" aria-hidden="true"><ArrowIcon /></span></div></div>
+      <div className="level-card-body"><span className="mini-kicker">LEVEL {String(index + 1).padStart(2, '0')}{index >= 5 ? ' · CHALLENGE' : ''}</span><h3>{puzzle?.title ?? entry.slug}</h3><p>{entry.caption}</p><div className="level-card-foot"><span className="level-card-progress">{puzzle ? `${countFound(session, puzzle)} / ${puzzle.finds.length + 1} found` : 'Open level'}</span><span className="level-card-arrow" aria-hidden="true"><ArrowIcon /></span></div></div>
     </a>)}</div>}
   </div>;
 }

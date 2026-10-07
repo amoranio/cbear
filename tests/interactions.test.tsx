@@ -10,6 +10,9 @@ import farm from '../public/puzzles/levels/farm.json';
 import harbour from '../public/puzzles/levels/harbour.json';
 import fair from '../public/puzzles/levels/fair.json';
 import castle from '../public/puzzles/levels/castle.json';
+import museum from '../public/puzzles/levels/museum.json';
+import gardens from '../public/puzzles/levels/gardens.json';
+import parade from '../public/puzzles/levels/parade.json';
 import { App, Learn, Play, PlayGallery } from '../src/main';
 import { Read } from '../src/Read';
 import { playClip, playPhoneme } from '../src/audio';
@@ -24,7 +27,7 @@ vi.mock('../src/audio', () => ({
 }));
 
 const puzzle = current as Puzzle;
-const levelPuzzles = { park, farm, harbour, fair, castle } as const;
+const levelPuzzles = { park, farm, harbour, fair, castle, museum, gardens, parade } as const;
 const freshSession = (): Session => ({ stage: 'sounds', points: 0, found: [], foundItems: {} });
 
 function mockAllPuzzles() {
@@ -171,7 +174,7 @@ describe('Play', () => {
     expect(screen.getByText('You found everything!')).toBeTruthy();
   });
 
-  it('validates all five selectable levels and their bundled files', () => {
+  it('validates all eight selectable levels and their bundled files', () => {
     expect(isLevelCatalog(catalog)).toBe(true);
     const ids = new Set<string>();
     for (const entry of catalog.levels) {
@@ -196,6 +199,9 @@ describe('Play', () => {
     expect(await screen.findByText('The castle courtyard')).toBeTruthy();
     expect(screen.getByRole('link', { name: /The park/ }).getAttribute('href')).toBe('#play/park');
     expect(screen.getByRole('link', { name: /The castle courtyard/ }).getAttribute('href')).toBe('#play/castle');
+    expect(screen.getByRole('link', { name: /The museum/ }).getAttribute('href')).toBe('#play/museum');
+    expect(screen.getByRole('link', { name: /The botanical gardens/ }).getAttribute('href')).toBe('#play/gardens');
+    expect(screen.getByRole('link', { name: /The city parade/ }).getAttribute('href')).toBe('#play/parade');
     expect(screen.getByText('2 / 5 found')).toBeTruthy();
     expect(screen.getAllByText('0 / 5 found').length).toBeGreaterThan(0);
     expect(awardTarget(session, 'level-park', 'cbear').points).toBe(25);
@@ -210,6 +216,32 @@ describe('Play', () => {
     expect(screen.getByRole('link', { name: /All levels/ }).getAttribute('href')).toBe('#play');
     expect(screen.getByText('The farm')).toBeTruthy();
     location.hash = '';
+  });
+
+  it.each(['museum', 'gardens', 'parade'] as const)('plays new level %s with narration, zoom and independent rewards', async slug => {
+    mockAllPuzzles();
+    function LevelHarness() {
+      const [session, setSession] = useState(freshSession);
+      return <><span data-testid="points">{session.points}</span><Play slug={slug} stage="sounds" session={session} markTarget={(puzzleId, targetId) => setSession(previous => awardTarget(previous, puzzleId, targetId))} /></>;
+    }
+    render(<LevelHarness />);
+    const scene = levelPuzzles[slug];
+    const image = await screen.findByRole('img', { name: new RegExp(scene.alt.slice(0, 20), 'i') });
+    vi.spyOn(image, 'getBoundingClientRect').mockReturnValue({ left: 0, top: 0, width: 1000, height: 1000, right: 1000, bottom: 1000, x: 0, y: 0, toJSON: () => ({}) });
+    fireEvent.click(screen.getByRole('button', { name: 'Listen to clue' }));
+    expect(playClip).toHaveBeenCalledWith(scene.clues.sounds.audio, scene.clues.sounds.spoken);
+    fireEvent.click(screen.getByRole('button', { name: `Hear ${scene.finds[0].label}` }));
+    expect(playClip).toHaveBeenCalledWith(scene.finds[0].audio, scene.finds[0].spoken);
+    fireEvent.click(screen.getByRole('button', { name: /Zoom in/ }));
+    expect(screen.getByRole('button', { name: /Fit picture/ })).toBeTruthy();
+    for (const target of [scene.bear, ...scene.finds.map(item => item.box)]) {
+      fireEvent.click(image, { clientX: (target.x + target.w / 2) * 1000, clientY: (target.y + target.h / 2) * 1000 });
+    }
+    expect(screen.getByTestId('points').textContent).toBe('45');
+    expect(screen.getByText('6 / 6 found')).toBeTruthy();
+    expect(screen.getByText('You found everything!')).toBeTruthy();
+    fireEvent.click(image, { clientX: (scene.bear.x + scene.bear.w / 2) * 1000, clientY: (scene.bear.y + scene.bear.h / 2) * 1000 });
+    expect(screen.getByTestId('points').textContent).toBe('45');
   });
 
   it('shows a recoverable error for an unknown level', async () => {

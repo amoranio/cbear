@@ -88,7 +88,7 @@ export async function loadCurrentPuzzle(): Promise<Puzzle> {
 export function isLevelCatalog(value: unknown): value is { levels: LevelEntry[] } {
   if (!value || typeof value !== 'object') return false;
   const levels = (value as { levels?: unknown }).levels;
-  if (!Array.isArray(levels) || levels.length !== 5) return false;
+  if (!Array.isArray(levels) || levels.length !== 8) return false;
   const seen = new Set<string>();
   return levels.every(item => {
     if (!item || typeof item !== 'object') return false;

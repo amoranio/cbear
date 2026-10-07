@@ -1,0 +1,20 @@
+{
+  "id": "level-museum",
+  "title": "The museum",
+  "image": "scenes/level-museum.jpg",
+  "alt": "A busy natural history museum with fossils, visitors and display cases. Cbear in his navy scarf is among the people near the middle stairs.",
+  "bear": { "x": 0.607, "y": 0.496, "w": 0.032, "h": 0.093 },
+  "finds": [
+    { "id": "vase", "label": "Blue vase", "spoken": "Find the blue vase on the left.", "audio": "audio/finds/level-museum-vase.wav", "box": { "x": 0.033, "y": 0.215, "w": 0.078, "h": 0.115 } },
+    { "id": "shell", "label": "Spiral shell", "spoken": "Find the spiral shell in the glass case.", "audio": "audio/finds/level-museum-shell.wav", "box": { "x": 0.018, "y": 0.416, "w": 0.079, "h": 0.132 } },
+    { "id": "clock", "label": "Brass clock", "spoken": "Find the brass clock on the right.", "audio": "audio/finds/level-museum-clock.wav", "box": { "x": 0.771, "y": 0.514, "w": 0.091, "h": 0.166 } },
+    { "id": "book", "label": "Red book", "spoken": "Find the red book on the front table.", "audio": "audio/finds/level-museum-book.wav", "box": { "x": 0.701, "y": 0.694, "w": 0.199, "h": 0.088 } },
+    { "id": "glass", "label": "Magnifying glass", "spoken": "Find the magnifying glass on the front table.", "audio": "audio/finds/level-museum-glass.wav", "box": { "x": 0.706, "y": 0.787, "w": 0.222, "h": 0.08 } }
+  ],
+  "clues": {
+    "sounds": { "text": "Look for the red book. Hear b in book.", "spoken": "Look for the red book. Hear the b sound in book.", "focus": "b", "audio": "audio/clues/level-museum-sounds.wav" },
+    "words": { "text": "Find the red book. Sound out red.", "spoken": "Find the red book. Sound out red: r, e, d.", "focus": "red", "audio": "audio/clues/level-museum-words.wav" },
+    "digraphs": { "text": "Look at the shell. Hear sh in shell.", "spoken": "Look at the shell. Hear sh in shell.", "focus": "sh", "audio": "audio/clues/level-museum-digraphs.wav" }
+  },
+  "hint": "Look near the middle steps, among the visitors."
+}

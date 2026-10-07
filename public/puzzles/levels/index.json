@@ -4,6 +4,9 @@
     { "slug": "farm", "manifest": "puzzles/levels/farm.json", "thumbnail": "scenes/level-farm-thumb.jpg", "caption": "Look around the busy farmyard." },
     { "slug": "harbour", "manifest": "puzzles/levels/harbour.json", "thumbnail": "scenes/level-harbour-thumb.jpg", "caption": "Explore the boats and the quay." },
     { "slug": "fair", "manifest": "puzzles/levels/fair.json", "thumbnail": "scenes/level-fair-thumb.jpg", "caption": "Spot the little things at the fair." },
-    { "slug": "castle", "manifest": "puzzles/levels/castle.json", "thumbnail": "scenes/level-castle-thumb.jpg", "caption": "Look closely in the crowded courtyard." }
+    { "slug": "castle", "manifest": "puzzles/levels/castle.json", "thumbnail": "scenes/level-castle-thumb.jpg", "caption": "Look closely in the crowded courtyard." },
+    { "slug": "museum", "manifest": "puzzles/levels/museum.json", "thumbnail": "scenes/level-museum-thumb.jpg", "caption": "Search every corner of the busy museum." },
+    { "slug": "gardens", "manifest": "puzzles/levels/gardens.json", "thumbnail": "scenes/level-gardens-thumb.jpg", "caption": "Look through the leaves and winding paths." },
+    { "slug": "parade", "manifest": "puzzles/levels/parade.json", "thumbnail": "scenes/level-parade-thumb.jpg", "caption": "Spot small details in the crowded city parade." }
   ]
 }

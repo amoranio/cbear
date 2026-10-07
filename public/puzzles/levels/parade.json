@@ -1,0 +1,20 @@
+{
+  "id": "level-parade",
+  "title": "The city parade",
+  "image": "scenes/level-parade.jpg",
+  "alt": "A crowded modern city street parade with dancers and spectators. Cbear in his navy scarf is tucked in the crowd on the left.",
+  "bear": { "x": 0.328, "y": 0.435, "w": 0.056, "h": 0.203 },
+  "finds": [
+    { "id": "trumpet", "label": "Gold trumpet", "spoken": "Find the gold trumpet on the bench.", "audio": "audio/finds/level-parade-trumpet.wav", "box": { "x": 0.008, "y": 0.564, "w": 0.16, "h": 0.088 } },
+    { "id": "mask", "label": "White mask", "spoken": "Find the white mask on the left.", "audio": "audio/finds/level-parade-mask.wav", "box": { "x": 0.186, "y": 0.655, "w": 0.051, "h": 0.081 } },
+    { "id": "ribbon", "label": "Purple ribbon", "spoken": "Find the purple ribbon on the basket.", "audio": "audio/finds/level-parade-ribbon.wav", "box": { "x": 0.333, "y": 0.77, "w": 0.059, "h": 0.085 } },
+    { "id": "parasol", "label": "Green parasol", "spoken": "Find the green parasol on the right.", "audio": "audio/finds/level-parade-parasol.wav", "box": { "x": 0.881, "y": 0.281, "w": 0.113, "h": 0.111 } },
+    { "id": "horse", "label": "Red toy horse", "spoken": "Find the red toy horse on the right.", "audio": "audio/finds/level-parade-horse.wav", "box": { "x": 0.91, "y": 0.774, "w": 0.063, "h": 0.099 } }
+  ],
+  "clues": {
+    "sounds": { "text": "See the mask. Hear m in mask.", "spoken": "See the mask. Hear the m sound in mask.", "focus": "m", "audio": "audio/clues/level-parade-sounds.wav" },
+    "words": { "text": "Look for the red toy horse. Sound out red.", "spoken": "Look for the red toy horse. Sound out red: r, e, d.", "focus": "red", "audio": "audio/clues/level-parade-words.wav" },
+    "digraphs": { "text": "Look by the shop. Hear sh in shop.", "spoken": "Look by the shop. Hear sh in shop.", "focus": "sh", "audio": "audio/clues/level-parade-digraphs.wav" }
+  },
+  "hint": "Search the left side of the crowd, below the black street lamp."
+}

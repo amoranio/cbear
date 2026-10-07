@@ -1,0 +1,20 @@
+{
+  "id": "level-gardens",
+  "title": "The botanical gardens",
+  "image": "scenes/level-gardens.jpg",
+  "alt": "A lush glasshouse full of visitors, flowers, paths and a pond. Cbear in his navy scarf stands near the steps at the upper left.",
+  "bear": { "x": 0.24, "y": 0.17, "w": 0.034, "h": 0.087 },
+  "finds": [
+    { "id": "boot", "label": "Red boot", "spoken": "Find the red boot on the path.", "audio": "audio/finds/level-gardens-boot.wav", "box": { "x": 0.117, "y": 0.765, "w": 0.062, "h": 0.091 } },
+    { "id": "frog", "label": "Green frog", "spoken": "Find the green frog by the water.", "audio": "audio/finds/level-gardens-frog.wav", "box": { "x": 0.75, "y": 0.459, "w": 0.047, "h": 0.052 } },
+    { "id": "can", "label": "Blue watering can", "spoken": "Find the blue watering can by the path.", "audio": "audio/finds/level-gardens-can.wav", "box": { "x": 0.281, "y": 0.444, "w": 0.066, "h": 0.074 } },
+    { "id": "butterfly", "label": "Yellow butterfly", "spoken": "Find the yellow butterfly near the top.", "audio": "audio/finds/level-gardens-butterfly.wav", "box": { "x": 0.907, "y": 0.05, "w": 0.044, "h": 0.088 } },
+    { "id": "glove", "label": "White glove", "spoken": "Find the white glove on the stone ledge.", "audio": "audio/finds/level-gardens-glove.wav", "box": { "x": 0.71, "y": 0.812, "w": 0.09, "h": 0.084 } }
+  ],
+  "clues": {
+    "sounds": { "text": "Look for the red boot. Hear b in boot.", "spoken": "Look for the red boot. Hear the b sound in boot.", "focus": "b", "audio": "audio/clues/level-gardens-sounds.wav" },
+    "words": { "text": "Find the red boot. Sound out red.", "spoken": "Find the red boot. Sound out red: r, e, d.", "focus": "red", "audio": "audio/clues/level-gardens-words.wav" },
+    "digraphs": { "text": "Look in the shade. Hear sh in shade.", "spoken": "Look in the shade by the steps. Hear sh in shade.", "focus": "sh", "audio": "audio/clues/level-gardens-digraphs.wav" }
+  },
+  "hint": "Look by the steps at the back, where big leaves meet the path."
+}

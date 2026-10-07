@@ -10,7 +10,7 @@ const puzzleIds = new Set();
 
 try {
   const catalog = JSON.parse(readFileSync(join(root, 'puzzles/levels/index.json'), 'utf8'));
-  if (!Array.isArray(catalog.levels) || catalog.levels.length !== 5) throw new Error('the level catalog must list five games');
+  if (!Array.isArray(catalog.levels) || catalog.levels.length !== 8) throw new Error('the level catalog must list eight games');
   const slugs = new Set();
   for (const level of catalog.levels) {
     if (typeof level.slug !== 'string' || !/^[a-z0-9-]+$/.test(level.slug) || slugs.has(level.slug) ||
