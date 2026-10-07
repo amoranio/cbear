@@ -5,9 +5,10 @@ import { lessons, stageDescriptions, stageNames, stageOrder, type Card } from '.
 import { bearQuadrant, loadCurrentPuzzle, targetAtPoint, type Puzzle, type StageId } from './puzzle';
 import { awardTarget, targetIsFound, type Session } from './progress';
 import { soundGroups } from './soundBoard';
+import { Read } from './Read';
 import './styles.css';
 
-type Page = 'home' | 'learn' | 'play';
+type Page = 'home' | 'learn' | 'read' | 'play';
 
 function readSession(): Session {
   try {
@@ -26,7 +27,7 @@ function readSession(): Session {
 }
 
 function pageFromHash(): Page {
-  return location.hash === '#learn' ? 'learn' : location.hash === '#play' ? 'play' : 'home';
+  return location.hash === '#learn' ? 'learn' : location.hash === '#read' ? 'read' : location.hash === '#play' ? 'play' : 'home';
 }
 
 function SpeakerIcon() {
@@ -61,6 +62,7 @@ function App() {
       <a className="brand" href="#home" aria-label="Cbear home"><span className="brand-mark">c<span>✦</span></span><span>cbear<span className="brand-period">.</span></span></a>
       <nav className="main-nav" aria-label="Main navigation">
         <a href="#learn" aria-current={page === 'learn' ? 'page' : undefined}>Learn</a>
+        <a href="#read" aria-current={page === 'read' ? 'page' : undefined}>Read</a>
         <a href="#play" aria-current={page === 'play' ? 'page' : undefined}>Play</a>
       </nav>
       <div className="points-pill" aria-label={`${session.points} points this session`}><span aria-hidden="true">✦</span> {session.points}<span className="points-label"> points</span></div>
@@ -69,6 +71,7 @@ function App() {
     <main>
       {page === 'home' && <Home />}
       {page === 'learn' && <Learn stage={session.stage} setStage={setStage} addPoints={addPoints} />}
+      {page === 'read' && <Read />}
       {page === 'play' && <Play stage={session.stage} session={session} markTarget={markTarget} />}
     </main>
 
@@ -82,7 +85,7 @@ function Home() {
       <div className="hero-copy">
         <div className="eyebrow"><span className="eyebrow-line" /> READ · EXPLORE · GROW</div>
         <h1>A little reading.<br/><em>A big adventure.</em></h1>
-        <p>Discover sounds, build words, and search for Cbear in a world full of things to notice.</p>
+        <p>Discover sounds, read a little story, and search for Cbear in a world full of things to notice.</p>
         <div className="hero-actions">
           <a className="button button-primary" href="#learn">Start learning <ArrowIcon /></a>
           <a className="button button-quiet" href="#play">Find Cbear <SearchIcon /></a>
@@ -93,10 +96,11 @@ function Home() {
     </section>
 
     <section className="home-paths container" aria-labelledby="choose-title">
-      <div className="section-intro"><span className="section-kicker">YOUR NEXT STEP</span><h2 id="choose-title">Choose your adventure</h2><p>Two ways to practise. Both help the words make sense.</p></div>
+      <div className="section-intro"><span className="section-kicker">YOUR NEXT STEP</span><h2 id="choose-title">Choose your adventure</h2><p>Three ways to practise. Each helps the words make sense.</p></div>
       <div className="path-grid">
         <a className="path-card learn-path" href="#learn"><span className="path-count">01 / LEARN</span><span className="path-symbol" aria-hidden="true">Aa<span>·</span></span><span className="path-content"><strong>Hear it. Say it. Read it.</strong><span>Small phonics cards that grow with every sound you learn.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
-        <a className="path-card play-path" href="#play"><span className="path-count">02 / PLAY</span><span className="path-symbol path-search" aria-hidden="true"><SearchIcon /></span><span className="path-content"><strong>Where’s Cbear?</strong><span>Read the clue, explore the scene, and spot your friend.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
+        <a className="path-card read-path" href="#read"><span className="path-count">02 / READ</span><span className="path-symbol path-book" aria-hidden="true">A<span>·</span></span><span className="path-content"><strong>A bug in my car.</strong><span>Tap each sound in a four-page story with Cbear.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
+        <a className="path-card play-path" href="#play"><span className="path-count">03 / PLAY</span><span className="path-symbol path-search" aria-hidden="true"><SearchIcon /></span><span className="path-content"><strong>Where’s Cbear?</strong><span>Read the clue, explore the scene, and spot your friend.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
       </div>
     </section>
     <section className="home-note container"><span className="small-star">✦</span><p>There’s no rush here. Try, listen again, and enjoy the moment you get it.</p></section>

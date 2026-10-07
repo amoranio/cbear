@@ -1,15 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
+import { existsSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import current from '../public/puzzles/current.json';
 import { Learn, Play } from '../src/main';
+import { Read } from '../src/Read';
 import { playClip, playPhoneme } from '../src/audio';
 import { awardTarget, type Session } from '../src/progress';
 import { isPuzzle, targetAtPoint, type Puzzle } from '../src/puzzle';
+import { readStory, soundsForWord } from '../src/readStory';
 
 vi.mock('../src/audio', () => ({
   playClip: vi.fn(() => Promise.resolve()),
   playPhoneme: vi.fn(() => Promise.resolve()),
+  stopAudio: vi.fn(),
 }));
 
 const puzzle = current as Puzzle;
@@ -17,6 +22,7 @@ const freshSession = (): Session => ({ stage: 'sounds', points: 0, found: [], fo
 
 beforeEach(() => {
   vi.clearAllMocks();
+  sessionStorage.clear();
   globalThis.fetch = vi.fn(async () => ({ ok: true, json: async () => current })) as typeof fetch;
 });
 afterEach(cleanup);
@@ -54,6 +60,58 @@ describe('Learn', () => {
     expect(playClip).toHaveBeenCalledWith('audio/words/pan.wav', 'pan');
     fireEvent.click(screen.getByRole('button', { name: 'Hear ai as in rain' }));
     expect(playClip).toHaveBeenCalledWith('audio/ai.m4a', 'ai as in rain');
+    expect(screen.getByRole('button', { name: 'Hear th as in thin' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Hear th as in this' })).toBeNull();
+  });
+});
+
+describe('Read', () => {
+  it('plays the sounds actually printed in the story, including ar and the y in my', () => {
+    render(<Read />);
+    expect(screen.getByRole('group', { name: 'In my car.' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Hear ar in car' }));
+    expect(playClip).toHaveBeenCalledWith('audio/ar.m4a', 'ar as in car');
+    fireEvent.click(screen.getByRole('button', { name: 'Hear y in my' }));
+    expect(playClip).toHaveBeenCalledWith('audio/igh.m4a', 'y makes the eye sound in my');
+    fireEvent.click(screen.getByRole('button', { name: 'Hear the line' }));
+    expect(playClip).toHaveBeenCalledWith('audio/read/page-1.wav', 'In my car.');
+    fireEvent.click(screen.getByRole('button', { name: 'Next page →' }));
+    expect(screen.getByRole('group', { name: 'A bug in my car.' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Hear a as a word' }));
+    expect(playClip).toHaveBeenCalledWith('audio/read/a-article.wav', 'a bug');
+  });
+
+  it('turns pages, resumes within this session, and encourages a fresh read at the end', () => {
+    const view = render(<Read />);
+    expect((screen.getByRole('button', { name: '← Back' }) as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Next page →' }));
+    expect(sessionStorage.getItem('cbear-read-page-v1')).toBe('1');
+    view.unmount();
+    render(<Read />);
+    expect(screen.getByRole('group', { name: 'A bug in my car.' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Next page →' }));
+    expect(screen.getByRole('group', { name: 'A bug on my car.' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Next page →' }));
+    expect(screen.getByRole('group', { name: 'A bug on my cap!' })).toBeTruthy();
+    expect(screen.getByText(/You read with Cbear/)).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Read again' }));
+    expect(screen.getByRole('group', { name: 'In my car.' })).toBeTruthy();
+  });
+
+  it('has a bundled recording for every sound and every line', () => {
+    for (const page of readStory.pages) {
+      expect(page.words.join(' ') + page.punctuation).toBe(page.line);
+      for (const word of page.words) {
+        const sounds = soundsForWord(word);
+        expect(sounds.map(sound => sound.letters).join('')).toBe(word.toLowerCase());
+        for (const sound of sounds) {
+          const file = join(process.cwd(), 'public', sound.audio);
+          expect(existsSync(file) && statSync(file).size > 0).toBe(true);
+        }
+      }
+      const file = join(process.cwd(), 'public', page.audio);
+      expect(existsSync(file) && statSync(file).size > 0).toBe(true);
+    }
   });
 });
 

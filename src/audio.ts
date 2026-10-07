@@ -1,13 +1,21 @@
 let currentAudio: HTMLAudioElement | null = null;
 
+export function stopAudio(): void {
+  currentAudio?.pause();
+  currentAudio = null;
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
 export function playPhoneme(sound: string): Promise<void> {
   return playClip(`audio/${sound}.m4a`);
 }
 
 export function playClip(path: string, spokenFallback?: string): Promise<void> {
   if (currentAudio) currentAudio.pause();
-  currentAudio = new Audio(`${import.meta.env.BASE_URL}${path}`);
-  return currentAudio.play().catch(error => {
+  const audio = new Audio(`${import.meta.env.BASE_URL}${path}`);
+  currentAudio = audio;
+  return audio.play().catch(error => {
+    if (currentAudio !== audio || error?.name === 'AbortError') return;
     if (spokenFallback && speak(spokenFallback)) return;
     throw error;
   });

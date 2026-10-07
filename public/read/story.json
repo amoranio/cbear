@@ -1,0 +1,34 @@
+{
+  "id": "bug-in-my-car",
+  "title": "A bug in my car",
+  "pages": [
+    {
+      "words": ["In", "my", "car"],
+      "punctuation": ".",
+      "audio": "audio/read/page-1.wav",
+      "bug": "none",
+      "alt": "Cbear sits in his little green car."
+    },
+    {
+      "words": ["A", "bug", "in", "my", "car"],
+      "punctuation": ".",
+      "audio": "audio/read/page-2.wav",
+      "bug": "inside",
+      "alt": "A green beetle is inside Cbear's little green car."
+    },
+    {
+      "words": ["A", "bug", "on", "my", "car"],
+      "punctuation": ".",
+      "audio": "audio/read/page-3.wav",
+      "bug": "bonnet",
+      "alt": "The beetle has moved onto the bonnet of Cbear's car."
+    },
+    {
+      "words": ["A", "bug", "on", "my", "cap"],
+      "punctuation": "!",
+      "audio": "audio/read/page-4.wav",
+      "bug": "cap",
+      "alt": "The beetle is now on Cbear's cap."
+    }
+  ]
+}

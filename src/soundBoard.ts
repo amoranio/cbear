@@ -45,7 +45,6 @@ export const soundGroups: SoundGroup[] = [
     sounds: [
       sound('zz', 'buzz', 'z'), sound('qu', 'queen'), sound('ch', 'chip'), sound('sh', 'ship'),
       sound('th', 'thin', 'th', 'th-thin'),
-      { id: 'th-this', letters: 'th', example: 'this', audio: 'audio/th-voiced.wav', spoken: 'th as in this' },
       sound('ng', 'sing'),
     ],
   },

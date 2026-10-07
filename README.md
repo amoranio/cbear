@@ -1,6 +1,6 @@
-# Cbear — Learn & Play
+# Cbear — Learn, Read & Play
 
-A small, responsive reading site for early readers. **Learn** teaches UK letter sounds, blending and common digraphs through short cards and offers a Phase 2–3 sound library. Children can hear every answer before checking it. **Play** pairs a reading clue with a detailed search for Cbear and four other objects. The site is static and uses no accounts or tracking. Points and progress last only for the browser session.
+A small, responsive reading site for early readers. **Learn** teaches UK letter sounds, blending and common digraphs through short cards and offers a Phase 2–3 sound library. Children can hear every answer before checking it. **Read** is a four-page illustrated story whose printed sounds play when tapped. **Play** pairs a reading clue with a detailed search for Cbear and four other objects. The site is static and uses no accounts or tracking. Points and progress last only for the browser session.
 
 ## Run locally
 
@@ -18,6 +18,12 @@ The workflow in `.github/workflows/deploy.yml` builds and deploys on each push t
 ## Daily puzzle contract
 
 The live puzzle is `public/puzzles/current.json`. A daily update adds a new scene image in `public/scenes/`, three narrated clues in `public/audio/clues/`, four or five narrated finding items in `public/audio/finds/`, and replaces `current.json` in one commit. The two `.sample.json` files demonstrate additional prepared scenes. Use a new ID and filenames for each puzzle so browser caches cannot show old artwork.
+
+## Read story
+
+The first book lives in `public/read/story.json`, with its sound map in `src/readStory.ts`. It reuses the Cbear design in a quiet car illustration and moves a beetle between four page positions. Each printed sound button plays a bundled clip; `ar` in *car* stays together, and `y` in *my* uses the /aɪ/ sound. The article *a* has its own unstressed UK sound clip. A separate button narrates each complete line. The current page is remembered only in browser session storage, with no Read points or account.
+
+To regenerate the five Read WAV files with the Piper voice described below, run `python scripts/generate-audio.py --model en_GB-cori-medium.onnx --read`. Daily puzzle bots must leave this story, its artwork, and its audio alone.
 
 ```json
 {
