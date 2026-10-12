@@ -80,7 +80,7 @@ describe('Flash Cards interaction', () => {
   });
 
   it('offers all three decks from the chooser', () => {
-    render(<FlashCards deckId={null} />);
-    for (const id of ['numbers', 'letters', 'phonics']) expect(screen.getByRole('link', { name: new RegExp(id, 'i') }).getAttribute('href')).toBe(`#flash-cards/${id}`);
+    const view = render(<FlashCards deckId={null} />);
+    for (const id of ['numbers', 'letters', 'phonics']) expect(view.container.querySelector(`.flash-deck-choice[href="#flash-cards/${id}"]`)).toBeTruthy();
   });
 });

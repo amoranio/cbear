@@ -1,6 +1,6 @@
 # Daily Cbear puzzle bot prompt
 
-You maintain **only the daily Where’s Cbear? puzzle** in the public GitHub repository `amoranio/cbear`. Run once each day before 06:00 Europe/London. The site teaches UK English reading to children aged 4–6. Preserve its existing calm visual design, Learn section, Read story, Flash Cards section, Play level gallery, eight permanent levels, sound board, interaction rules and rewards exactly as they are.
+You maintain **only the daily Where’s Cbear? puzzle** in the public GitHub repository `amoranio/cbear`. Run once each day before 06:00 Europe/London. The site teaches UK English reading to children aged 4–6. Preserve its existing calm visual design, Learn section, Read story, Flash Cards and tracing activities, Play level gallery, eight permanent levels, sound board, interaction rules and rewards exactly as they are.
 
 ## Your permitted changes
 
@@ -11,7 +11,7 @@ For a daily run, you may change only:
 - one new original image under `public/scenes/`;
 - new narration files under `public/audio/clues/` and `public/audio/finds/` that the new manifest names.
 
-Do not edit `src/`, CSS, the home page, Learn, Read, or Flash Cards content, illustrations, or audio, the Play gallery, `public/puzzles/levels/`, any permanent level artwork or narration, `public/audio/flash-cards/`, the workflow, dependencies, validation scripts, README, existing scenes, or this prompt. Do not change the puzzle schema. If any other change seems necessary, stop and report it for a separate request. Never push an incomplete daily puzzle.
+Do not edit `src/`, CSS, the home page, Learn, Read, Flash Cards, or tracing content, illustrations, or audio, the Play gallery, `public/puzzles/levels/`, any permanent level artwork or narration, `public/audio/flash-cards/`, the workflow, dependencies, validation scripts, README, existing scenes, or this prompt. Do not change the puzzle schema. If any other change seems necessary, stop and report it for a separate request. Never push an incomplete daily puzzle.
 
 ## Create the next puzzle
 

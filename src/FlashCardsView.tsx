@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { playClip, stopAudio } from './audio';
 import { advanceDeckProgress, flashDecks, freshDeckProgress, restoreDeckProgress, type DeckId, type DeckProgress } from './flashCards';
+import { Trace } from './Trace';
+import type { TraceMode } from './traceData';
 
 const storageKey = (deckId: DeckId) => `cbear-flash-cards-${deckId}-v1`;
 
@@ -16,6 +18,8 @@ function SpeakerIcon() {
 function DeckChooser() {
   return <div className="flash-page container">
     <div className="page-intro flash-intro"><span className="section-kicker">PRACTISE TOGETHER</span><h1>Flash cards. <em>One at a time.</em></h1><p>Choose a set, say what you see, then hear it together. Swipe or press Next when you are ready.</p></div>
+    <a className="trace-feature" href="#flash-cards/trace"><span className="trace-feature-copy"><span className="mini-kicker">NEW · DRAW IT YOUR WAY</span><strong>Trace letters & numbers.</strong><span>Follow a soft guide, then make your own lines with a finger or mouse. Start with 1–10 and p, q, b, d, g, y.</span><span className="trace-feature-action">Start tracing →</span></span><span className="trace-feature-art" aria-hidden="true"><span>7</span><span>g</span><i /></span></a>
+    <div className="flash-deck-heading"><span className="section-kicker">OR CHOOSE A CARD SET</span><h2>See it. Say it. Hear it.</h2></div>
     <div className="flash-deck-grid">
       {(['numbers', 'letters', 'phonics'] as const).map((id, index) => {
         const deck = flashDecks[id];
@@ -119,6 +123,6 @@ function FlashDeck({ deckId }: { deckId: DeckId }) {
   </div>;
 }
 
-export function FlashCards({ deckId }: { deckId: DeckId | null }) {
-  return deckId ? <FlashDeck key={deckId} deckId={deckId} /> : <DeckChooser />;
+export function FlashCards({ deckId, traceMode }: { deckId: DeckId | null; traceMode?: TraceMode | 'choose' | null }) {
+  return traceMode ? <Trace mode={traceMode === 'choose' ? null : traceMode} /> : deckId ? <FlashDeck key={deckId} deckId={deckId} /> : <DeckChooser />;
 }
