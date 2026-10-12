@@ -6,9 +6,11 @@ import { bearQuadrant, loadCurrentPuzzle, loadLevelCatalog, loadLevelPuzzle, loa
 import { awardTarget, targetIsFound, type Session } from './progress';
 import { soundGroups } from './soundBoard';
 import { Read } from './Read';
+import { FlashCards } from './FlashCardsView';
+import { isDeckId } from './flashCards';
 import './styles.css';
 
-type Page = 'home' | 'learn' | 'read' | 'play';
+type Page = 'home' | 'learn' | 'read' | 'play' | 'flash-cards';
 
 function readSession(): Session {
   try {
@@ -27,7 +29,7 @@ function readSession(): Session {
 }
 
 function pageFromHash(hash: string): Page {
-  return hash === '#learn' ? 'learn' : hash === '#read' ? 'read' : hash.startsWith('#play') ? 'play' : 'home';
+  return hash === '#learn' ? 'learn' : hash === '#read' ? 'read' : hash.startsWith('#play') ? 'play' : hash.startsWith('#flash-cards') ? 'flash-cards' : 'home';
 }
 
 function playSlugFromHash(hash: string): string | null {
@@ -70,6 +72,7 @@ export function App() {
         <a href="#learn" aria-current={page === 'learn' ? 'page' : undefined}>Learn</a>
         <a href="#read" aria-current={page === 'read' ? 'page' : undefined}>Read</a>
         <a href="#play" aria-current={page === 'play' ? 'page' : undefined}>Play</a>
+        <a href="#flash-cards" aria-current={page === 'flash-cards' ? 'page' : undefined}>Flash Cards</a>
       </nav>
       <div className="points-pill" aria-label={`${session.points} points this session`}><span aria-hidden="true">✦</span> {session.points}<span className="points-label"> points</span></div>
     </header>
@@ -78,6 +81,7 @@ export function App() {
       {page === 'home' && <Home />}
       {page === 'learn' && <Learn stage={session.stage} setStage={setStage} addPoints={addPoints} />}
       {page === 'read' && <Read />}
+      {page === 'flash-cards' && <FlashCards deckId={isDeckId(route.split('/')[1] ?? '') ? route.split('/')[1] as 'numbers' | 'letters' | 'phonics' : null} />}
       {page === 'play' && (playSlug === null ? <PlayGallery session={session} /> : <Play key={playSlug} slug={playSlug} stage={session.stage} session={session} markTarget={markTarget} />)}
     </main>
 
@@ -102,11 +106,12 @@ function Home() {
     </section>
 
     <section className="home-paths container" aria-labelledby="choose-title">
-      <div className="section-intro"><span className="section-kicker">YOUR NEXT STEP</span><h2 id="choose-title">Choose your adventure</h2><p>Three ways to practise. Each helps the words make sense.</p></div>
+      <div className="section-intro"><span className="section-kicker">YOUR NEXT STEP</span><h2 id="choose-title">Choose your adventure</h2><p>Four ways to practise. Each helps the words make sense.</p></div>
       <div className="path-grid">
         <a className="path-card learn-path" href="#learn"><span className="path-count">01 / LEARN</span><span className="path-symbol" aria-hidden="true">Aa<span>·</span></span><span className="path-content"><strong>Hear it. Say it. Read it.</strong><span>Small phonics cards that grow with every sound you learn.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
         <a className="path-card read-path" href="#read"><span className="path-count">02 / READ</span><span className="path-symbol path-book" aria-hidden="true">A<span>·</span></span><span className="path-content"><strong>A bug in my car.</strong><span>Tap each sound in a four-page story with Cbear.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
         <a className="path-card play-path" href="#play"><span className="path-count">03 / PLAY</span><span className="path-symbol path-search" aria-hidden="true"><SearchIcon /></span><span className="path-content"><strong>Where’s Cbear?</strong><span>Read the clue, explore the scene, and spot your friend.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
+        <a className="path-card flash-path" href="#flash-cards"><span className="path-count">04 / FLASH CARDS</span><span className="path-symbol path-flash" aria-hidden="true">12<span>·</span></span><span className="path-content"><strong>One card at a time.</strong><span>Numbers, letters, and sounds to practise together.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
       </div>
     </section>
     <section className="home-note container"><span className="small-star">✦</span><p>There’s no rush here. Try, listen again, and enjoy the moment you get it.</p></section>

@@ -25,6 +25,11 @@ WORDS = [
     "shin", "chat", "that", "chap", "thin", "than", "sing", "sang",
     "ding", "mash", "math", "dash", "path", "pat",
 ]
+NUMBERS = [
+    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+    "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
+    "eighteen", "nineteen", "twenty",
+]
 
 
 def generate(voice: PiperVoice, relative_path: str, text: str) -> None:
@@ -66,6 +71,7 @@ def main() -> None:
     parser.add_argument("--manifest", help="Puzzle manifest to narrate")
     parser.add_argument("--core", action="store_true", help="Generate Learn word clips and success message")
     parser.add_argument("--read", action="store_true", help="Generate the bundled Read story narration")
+    parser.add_argument("--numbers", action="store_true", help="Generate the Flash Cards number narration")
     args = parser.parse_args()
     voice = PiperVoice.load(args.model)
 
@@ -83,6 +89,10 @@ def main() -> None:
         for index, page in enumerate(story["pages"], start=1):
             line = " ".join(page["words"]) + page["punctuation"]
             generate(voice, page["audio"], line)
+
+    if args.numbers:
+        for number, word in enumerate(NUMBERS, start=1):
+            generate(voice, f"audio/flash-cards/numbers/{number}.wav", word)
 
     if args.manifest:
         puzzle = json.loads(Path(args.manifest).read_text())
