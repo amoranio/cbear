@@ -6,7 +6,7 @@ export type SpotProgress = DeckProgress & { wrongIndex: number };
 
 // A mirror must be visibly different from the printed character. The omitted
 // shapes still appear in the ordinary flash-card decks.
-const letterFaces = Array.from('abcdefghijklmnopqrstuvwxyz').filter(face => !'mouvwx'.includes(face));
+const letterFaces = Array.from('abcdefghijklmnopqrstuvwxyz').filter(face => !'ilmouvwx'.includes(face));
 const numberFaces = Array.from('123456789').filter(face => face !== '8');
 
 export const spotSets: Record<SpotMode, { title: string; cards: SpotCard[] }> = {

@@ -22,7 +22,7 @@ function SpotChooser() {
     <div className="spot-choice-grid">
       {(['letters', 'numbers'] as const).map((mode, index) => <a className="spot-choice" href={`#flash-cards/spot/${mode}`} key={mode}>
         <span className="mini-kicker">{String(index + 1).padStart(2, '0')} / {spotSets[mode].cards.length} SHAPES</span>
-        <span className="spot-choice-symbol school-print" aria-hidden="true">{mode === 'letters' ? 'b' : '3'}</span>
+        <span className="spot-choice-symbol" aria-hidden="true">{mode === 'letters' ? 'b' : '3'}</span>
         <strong>{spotSets[mode].title}</strong>
         <span>Find one mirrored {mode === 'letters' ? 'lowercase letter' : 'number'} in each grid.</span>
         <span className="spot-choice-action">Start spotting →</span>
@@ -83,12 +83,12 @@ function SpotGame({ mode }: { mode: SpotMode }) {
 
   return <div className="flash-page spot-page container">
     <div className="flash-deck-top"><a className="all-levels-link" href="#flash-cards/spot">← Spotting choices</a><span className="mini-kicker">{set.title.toUpperCase()} · ROUND {progress.round}</span></div>
-    <div className="page-intro spot-practice-intro"><span className="section-kicker">LOOK · LISTEN · FIND</span><h1>Find the backwards <em className="school-print">{card.face}.</em></h1><p>One {mode === 'letters' ? 'letter' : 'number'} has been flipped. Tap it to continue.</p></div>
+    <div className="page-intro spot-practice-intro"><span className="section-kicker">LOOK · LISTEN · FIND</span><h1>Find the backwards <em>{card.face}.</em></h1><p>One {mode === 'letters' ? 'letter' : 'number'} has been flipped. Tap it to continue.</p></div>
     <div className="spot-game">
       <div className="spot-game-top"><span>Card {progress.index + 1} of {set.cards.length}</span><button className="flash-sound-button" type="button" onClick={hearCard} aria-label={`Hear ${card.face}`}><SpeakerIcon /> Hear it</button></div>
       <div className="spot-grid" role="group" aria-label={`Find the backwards ${card.face} in a five by five grid`}>
         {Array.from({ length: 25 }, (_, index) => <button className="spot-cell" type="button" key={index} disabled={locked} onClick={() => chooseTile(index)} aria-label={`${card.face}, row ${Math.floor(index / 5) + 1}, column ${index % 5 + 1}`}>
-          <span className={`spot-glyph school-print${index === progress.wrongIndex ? ' spot-glyph-mirrored' : ''}`}>{card.face}</span>
+          <span className={`spot-glyph${index === progress.wrongIndex ? ' spot-glyph-mirrored' : ''}`}>{card.face}</span>
         </button>)}
       </div>
       <p className="spot-feedback" role="status" aria-live="polite" key={`${progress.round}-${progress.index}-${attempt}`}>{feedback || 'Look closely. You can try again.'}</p>

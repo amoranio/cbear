@@ -13,7 +13,7 @@ afterEach(() => { cleanup(); vi.useRealTimers(); vi.restoreAllMocks(); });
 
 describe('spotting card data', () => {
   it('uses visibly reversible lowercase letters and numbers with existing sounds', () => {
-    expect(spotSets.letters.cards.map(card => card.face).join('')).toBe('abcdefghijklnpqrstyz');
+    expect(spotSets.letters.cards.map(card => card.face).join('')).toBe('abcdefghjknpqrstyz');
     expect(spotSets.numbers.cards.map(card => card.face).join('')).toBe('12345679');
     for (const set of Object.values(spotSets)) for (const card of set.cards) {
       const file = join(process.cwd(), 'public', card.audio);
@@ -25,9 +25,9 @@ describe('spotting card data', () => {
   });
 
   it('reshuffles only after a round and never repeats the wrong position consecutively', () => {
-    let progress = freshSpotProgress(20, () => 0.3);
+    let progress = freshSpotProgress(spotSets.letters.cards.length, () => 0.3);
     const firstOrder = [...progress.order];
-    for (let index = 0; index < 19; index++) {
+    for (let index = 0; index < spotSets.letters.cards.length - 1; index++) {
       const previousWrong = progress.wrongIndex;
       progress = advanceSpotProgress(progress, () => 0.3);
       expect(progress.wrongIndex).not.toBe(previousWrong);
@@ -37,11 +37,11 @@ describe('spotting card data', () => {
     progress = advanceSpotProgress(progress, () => 0.9);
     expect(progress.round).toBe(2);
     expect(progress.wrongIndex).not.toBe(lastWrong);
-    expect(new Set(progress.order).size).toBe(20);
+    expect(new Set(progress.order).size).toBe(spotSets.letters.cards.length);
     expect(progress.order).not.toEqual(firstOrder);
     expect(chooseWrongIndex(() => 0, 0)).toBe(1);
-    expect(restoreSpotProgress(JSON.stringify(progress), 20, () => 0.9)?.wrongIndex).not.toBe(progress.wrongIndex);
-    expect(restoreSpotProgress(JSON.stringify({ ...progress, wrongIndex: 25 }), 20)).toBeNull();
+    expect(restoreSpotProgress(JSON.stringify(progress), spotSets.letters.cards.length, () => 0.9)?.wrongIndex).not.toBe(progress.wrongIndex);
+    expect(restoreSpotProgress(JSON.stringify({ ...progress, wrongIndex: 25 }), spotSets.letters.cards.length)).toBeNull();
   });
 });
 
@@ -68,23 +68,23 @@ describe('spotting interaction', () => {
     const cells = [...view.container.querySelectorAll<HTMLButtonElement>('.spot-cell')];
     const correct = cells.find(cell => cell.querySelector('.spot-glyph-mirrored'))!;
     const wrong = cells.find(cell => cell !== correct)!;
-    const before = screen.getByText(/Card 1 of 20/).textContent;
+    const before = screen.getByText(/Card 1 of 18/).textContent;
 
     fireEvent.click(screen.getByRole('button', { name: /^Hear [a-z]$/ }));
     expect(playClip).toHaveBeenCalled();
     fireEvent.click(wrong);
     expect(screen.getByRole('status').textContent).toContain('Not quite');
-    expect(screen.getByText(/Card 1 of 20/).textContent).toBe(before);
+    expect(screen.getByText(/Card 1 of 18/).textContent).toBe(before);
     expect(playClip).toHaveBeenCalledWith('audio/flash-cards/spot/try-again.wav', 'Not quite, try again.');
     fireEvent.click(wrong);
-    expect(screen.getByText(/Card 1 of 20/)).toBeTruthy();
+    expect(screen.getByText(/Card 1 of 18/)).toBeTruthy();
 
     fireEvent.click(correct);
     fireEvent.click(correct);
     expect(screen.getByRole('status').textContent).toContain('Well done');
     expect(playClip).toHaveBeenCalledWith('audio/flash-cards/spot/well-done.wav', 'Well done! You found it.');
     act(() => vi.advanceTimersByTime(2000));
-    expect(screen.getByText(/Card 2 of 20/)).toBeTruthy();
+    expect(screen.getByText(/Card 2 of 18/)).toBeTruthy();
     expect(view.container.querySelectorAll('.spot-glyph-mirrored').length).toBe(1);
   });
 
