@@ -72,6 +72,7 @@ def main() -> None:
     parser.add_argument("--core", action="store_true", help="Generate Learn word clips and success message")
     parser.add_argument("--read", action="store_true", help="Generate the bundled Read story narration")
     parser.add_argument("--numbers", action="store_true", help="Generate the Flash Cards number narration")
+    parser.add_argument("--spot", action="store_true", help="Generate Spot the wrong one feedback")
     args = parser.parse_args()
     voice = PiperVoice.load(args.model)
 
@@ -93,6 +94,10 @@ def main() -> None:
     if args.numbers:
         for number, word in enumerate(NUMBERS, start=1):
             generate(voice, f"audio/flash-cards/numbers/{number}.wav", word)
+
+    if args.spot:
+        generate(voice, "audio/flash-cards/spot/try-again.wav", "Not quite, try again.")
+        generate(voice, "audio/flash-cards/spot/well-done.wav", "Well done! You found it.")
 
     if args.manifest:
         puzzle = json.loads(Path(args.manifest).read_text())

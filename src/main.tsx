@@ -9,6 +9,7 @@ import { Read } from './Read';
 import { FlashCards } from './FlashCardsView';
 import { isDeckId } from './flashCards';
 import { isTraceMode, type TraceMode } from './traceData';
+import { isSpotMode, type SpotMode } from './spotCards';
 import './styles.css';
 
 type Page = 'home' | 'learn' | 'read' | 'play' | 'flash-cards';
@@ -57,6 +58,7 @@ export function App() {
   const flashPart = route.split('/')[1] ?? '';
   const tracePart = route.split('/')[2] ?? '';
   const traceMode: TraceMode | 'choose' | null = flashPart === 'trace' ? (isTraceMode(tracePart) ? tracePart : 'choose') : null;
+  const spotMode: SpotMode | 'choose' | null = flashPart === 'spot' ? (isSpotMode(tracePart) ? tracePart : 'choose') : null;
 
   useEffect(() => {
     const onHash = () => setRoute(location.hash);
@@ -85,7 +87,7 @@ export function App() {
       {page === 'home' && <Home />}
       {page === 'learn' && <Learn stage={session.stage} setStage={setStage} addPoints={addPoints} />}
       {page === 'read' && <Read />}
-      {page === 'flash-cards' && <FlashCards deckId={isDeckId(flashPart) ? flashPart : null} traceMode={traceMode} />}
+      {page === 'flash-cards' && <FlashCards deckId={isDeckId(flashPart) ? flashPart : null} traceMode={traceMode} spotMode={spotMode} />}
       {page === 'play' && (playSlug === null ? <PlayGallery session={session} /> : <Play key={playSlug} slug={playSlug} stage={session.stage} session={session} markTarget={markTarget} />)}
     </main>
 
@@ -115,7 +117,7 @@ function Home() {
         <a className="path-card learn-path" href="#learn"><span className="path-count">01 / LEARN</span><span className="path-symbol" aria-hidden="true">Aa<span>·</span></span><span className="path-content"><strong>Hear it. Say it. Read it.</strong><span>Small phonics cards that grow with every sound you learn.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
         <a className="path-card read-path" href="#read"><span className="path-count">02 / READ</span><span className="path-symbol path-book" aria-hidden="true">A<span>·</span></span><span className="path-content"><strong>A bug in my car.</strong><span>Tap each sound in a four-page story with Cbear.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
         <a className="path-card play-path" href="#play"><span className="path-count">03 / PLAY</span><span className="path-symbol path-search" aria-hidden="true"><SearchIcon /></span><span className="path-content"><strong>Where’s Cbear?</strong><span>Read the clue, explore the scene, and spot your friend.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
-        <a className="path-card flash-path" href="#flash-cards"><span className="path-count">04 / FLASH CARDS</span><span className="path-symbol path-flash" aria-hidden="true">12<span>·</span></span><span className="path-content"><strong>One card at a time.</strong><span>Numbers, letters, sounds, and tracing to practise together.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
+        <a className="path-card flash-path" href="#flash-cards"><span className="path-count">04 / FLASH CARDS</span><span className="path-symbol path-flash" aria-hidden="true">12<span>·</span></span><span className="path-content"><strong>One card at a time.</strong><span>Numbers, letters, sounds, tracing, and spotting to practise together.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
       </div>
     </section>
     <section className="home-note container"><span className="small-star">✦</span><p>There’s no rush here. Try, listen again, and enjoy the moment you get it.</p></section>
