@@ -1,6 +1,6 @@
 # Cbear — Learn, Read, Play & Flash Cards
 
-A small, responsive reading site for early readers. **Learn** teaches UK letter sounds, blending and common digraphs through short cards and offers a Phase 2–3 sound library. Children can hear every answer before checking it. **Read** is a four-page illustrated story whose printed sounds play when tapped. **Play** offers a daily search and eight selectable levels, with the final three adding much busier visual searches while keeping the reading approachable. **Flash Cards** offers parent-led number, letter and phonics decks that reshuffle after each round. The site is static and uses no accounts or tracking. Points and progress last only for the browser session.
+A small, responsive reading site for early readers. **Learn** teaches UK letter sounds, blending and common digraphs through short cards and offers a Phase 2–3 sound library. Children can hear every answer before checking it. **Read** has two short illustrated books whose printed sounds play when tapped. **Play** offers a daily search and eight selectable levels, with the final three adding much busier visual searches while keeping the reading approachable. **Flash Cards** offers parent-led number, letter and phonics decks that reshuffle after each round. The site is static and uses no accounts or tracking. Points and progress last only for the browser session.
 
 ## Run locally
 
@@ -37,9 +37,9 @@ To regenerate the number WAV files with the Piper voice described below, run `py
 
 ## Read story
 
-The first book lives in `public/read/story.json`, with its sound map in `src/readStory.ts`. It reuses the Cbear design in a quiet car illustration and moves a beetle between four page positions. Each printed sound button plays a bundled clip; `ar` in *car* stays together, and `y` in *my* uses the /aɪ/ sound. The article *a* has its own unstressed UK sound clip. A separate button narrates each complete line. The current page is remembered only in browser session storage, with no Read points or account.
+`#read` shows two books. The original four-page bug book opens at `#read/bug-in-my-car`; its manifest remains in `public/read/story.json`. The five-page sausage roll book opens at `#read/sausage-roll`, with its own manifest and new reusable artwork. The roll speaks to Cbear and hops into a puddle; the child reads short sound-focused lines while the pictures carry the harder nouns. Each printed sound button plays a bundled clip. Letter teams such as `ar`, `ee`, `ow`, and `sh` stay together, and `I`, `Hi`, `by`, and `my` use the /aɪ/ sound where printed. A separate button narrates each complete line. Each book remembers its own page only in browser session storage, with no Read points or account.
 
-To regenerate the five Read WAV files with the Piper voice described below, run `python scripts/generate-audio.py --model en_GB-cori-medium.onnx --read`. Daily puzzle bots must leave this story, its artwork, and its audio alone.
+To regenerate the original book's audio with the Piper voice described below, run `python scripts/generate-audio.py --model en_GB-cori-medium.onnx --read`. Use `--read-story sausage-roll` to regenerate only the five new line recordings. Daily puzzle bots must leave both books, their artwork, and their audio alone.
 
 ```json
 {

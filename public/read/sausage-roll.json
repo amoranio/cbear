@@ -1,0 +1,11 @@
+{
+  "id": "sausage-roll",
+  "title": "The sausage roll's big splash",
+  "pages": [
+    {"words": ["I", "can", "see", "it", "by", "my", "feet"], "marks": ["", "", "", "", "", "", "."], "audio": "audio/read/sausage-roll/page-1.wav", "scene": "found", "heading": "What did Cbear spot?", "alt": "Cbear notices a little sausage roll beside his feet, near a puddle."},
+    {"words": ["Hi", "I", "can", "see", "my", "pal"], "marks": ["!", "", "", "", "", "!"], "audio": "audio/read/sausage-roll/page-2.wav", "scene": "talking", "heading": "The roll says hello.", "alt": "The sausage roll looks at Cbear and speaks to him."},
+    {"words": ["I", "can", "hop", "up", "and", "down"], "marks": ["", "", "", "", "", "!"], "audio": "audio/read/sausage-roll/page-3.wav", "scene": "hopping", "heading": "Up it goes!", "alt": "The sausage roll hops into the air while Cbear watches."},
+    {"words": ["I", "hop", "in", "and", "splash"], "marks": ["", "", "", "", "!"], "audio": "audio/read/sausage-roll/page-4.wav", "scene": "splash", "heading": "Into the puddle!", "alt": "The sausage roll lands in the puddle and sends up a splash."},
+    {"words": ["I", "am", "wet", "but", "I", "can", "grin"], "marks": ["", "", "", "", "", "", "!"], "audio": "audio/read/sausage-roll/page-5.wav", "scene": "wet", "heading": "Still smiling.", "alt": "The sausage roll is wet but smiling beside the puddle, and Cbear smiles too."}
+  ]
+}

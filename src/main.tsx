@@ -31,7 +31,7 @@ function readSession(): Session {
 }
 
 function pageFromHash(hash: string): Page {
-  return hash === '#learn' ? 'learn' : hash === '#read' ? 'read' : hash.startsWith('#play') ? 'play' : hash.startsWith('#flash-cards') ? 'flash-cards' : 'home';
+  return hash === '#learn' ? 'learn' : hash === '#read' || hash.startsWith('#read/') ? 'read' : hash.startsWith('#play') ? 'play' : hash.startsWith('#flash-cards') ? 'flash-cards' : 'home';
 }
 
 function playSlugFromHash(hash: string): string | null {
@@ -55,6 +55,7 @@ export function App() {
   const [session, setSession] = useState<Session>(readSession);
   const page = pageFromHash(route);
   const playSlug = playSlugFromHash(route);
+  const readSlug = route.startsWith('#read/') ? route.slice('#read/'.length) : null;
   const flashPart = route.split('/')[1] ?? '';
   const tracePart = route.split('/')[2] ?? '';
   const traceMode: TraceMode | 'choose' | null = flashPart === 'trace' ? (isTraceMode(tracePart) ? tracePart : 'choose') : null;
@@ -86,7 +87,7 @@ export function App() {
     <main>
       {page === 'home' && <Home />}
       {page === 'learn' && <Learn stage={session.stage} setStage={setStage} addPoints={addPoints} />}
-      {page === 'read' && <Read />}
+      {page === 'read' && <Read storyId={readSlug} />}
       {page === 'flash-cards' && <FlashCards deckId={isDeckId(flashPart) ? flashPart : null} traceMode={traceMode} spotMode={spotMode} />}
       {page === 'play' && (playSlug === null ? <PlayGallery session={session} /> : <Play key={playSlug} slug={playSlug} stage={session.stage} session={session} markTarget={markTarget} />)}
     </main>
@@ -115,7 +116,7 @@ function Home() {
       <div className="section-intro"><span className="section-kicker">YOUR NEXT STEP</span><h2 id="choose-title">Choose your adventure</h2><p>Four ways to practise. Each helps the words make sense.</p></div>
       <div className="path-grid">
         <a className="path-card learn-path" href="#learn"><span className="path-count">01 / LEARN</span><span className="path-symbol" aria-hidden="true">Aa<span>·</span></span><span className="path-content"><strong>Hear it. Say it. Read it.</strong><span>Small phonics cards that grow with every sound you learn.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
-        <a className="path-card read-path" href="#read"><span className="path-count">02 / READ</span><span className="path-symbol path-book" aria-hidden="true">A<span>·</span></span><span className="path-content"><strong>A bug in my car.</strong><span>Tap each sound in a four-page story with Cbear.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
+        <a className="path-card read-path" href="#read"><span className="path-count">02 / READ</span><span className="path-symbol path-book" aria-hidden="true">A<span>·</span></span><span className="path-content"><strong>Pick a little story.</strong><span>Sound out each line with Cbear in two picture books.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
         <a className="path-card play-path" href="#play"><span className="path-count">03 / PLAY</span><span className="path-symbol path-search" aria-hidden="true"><SearchIcon /></span><span className="path-content"><strong>Where’s Cbear?</strong><span>Read the clue, explore the scene, and spot your friend.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
         <a className="path-card flash-path" href="#flash-cards"><span className="path-count">04 / FLASH CARDS</span><span className="path-symbol path-flash" aria-hidden="true">12<span>·</span></span><span className="path-content"><strong>One card at a time.</strong><span>Numbers, letters, sounds, tracing, and spotting to practise together.</span></span><span className="path-arrow"><ArrowIcon /></span></a>
       </div>

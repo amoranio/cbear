@@ -18,7 +18,7 @@ import { Read } from '../src/Read';
 import { playClip, playPhoneme } from '../src/audio';
 import { awardTarget, type Session } from '../src/progress';
 import { isLevelCatalog, isPuzzle, targetAtPoint, type Puzzle } from '../src/puzzle';
-import { readStory, soundsForWord } from '../src/readStory';
+import { readStories, readStory, soundsForWord } from '../src/readStory';
 
 vi.mock('../src/audio', () => ({
   playClip: vi.fn(() => Promise.resolve()),
@@ -87,8 +87,23 @@ describe('Learn', () => {
 });
 
 describe('Read', () => {
+  it('offers both books, opens direct links, and handles an unknown story', () => {
+    location.hash = '#read';
+    const chooser = render(<App />);
+    expect(chooser.container.querySelector('a[href="#read/bug-in-my-car"]')).toBeTruthy();
+    expect(chooser.container.querySelector('a[href="#read/sausage-roll"]')).toBeTruthy();
+    chooser.unmount();
+    location.hash = '#read/sausage-roll';
+    const book = render(<App />);
+    expect(screen.getByRole('group', { name: 'I can see it by my feet.' })).toBeTruthy();
+    expect(book.container.querySelector('a[href="#read"]')).toBeTruthy();
+    book.unmount();
+    render(<Read storyId="missing" />);
+    expect(screen.getByText('That story is not here yet.')).toBeTruthy();
+  });
+
   it('plays the sounds actually printed in the story, including ar and the y in my', () => {
-    render(<Read />);
+    render(<Read storyId="bug-in-my-car" />);
     expect(screen.getByRole('group', { name: 'In my car.' })).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Hear ar in car' }));
     expect(playClip).toHaveBeenCalledWith('audio/ar.m4a', 'ar as in car');
@@ -103,12 +118,12 @@ describe('Read', () => {
   });
 
   it('turns pages, resumes within this session, and encourages a fresh read at the end', () => {
-    const view = render(<Read />);
+    const view = render(<Read storyId="bug-in-my-car" />);
     expect((screen.getByRole('button', { name: '← Back' }) as HTMLButtonElement).disabled).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: 'Next page →' }));
-    expect(sessionStorage.getItem('cbear-read-page-v1')).toBe('1');
+    expect(sessionStorage.getItem('cbear-read-page-bug-in-my-car-v1')).toBe('1');
     view.unmount();
-    render(<Read />);
+    render(<Read storyId="bug-in-my-car" />);
     expect(screen.getByRole('group', { name: 'A bug in my car.' })).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Next page →' }));
     expect(screen.getByRole('group', { name: 'A bug on my car.' })).toBeTruthy();
@@ -119,9 +134,38 @@ describe('Read', () => {
     expect(screen.getByRole('group', { name: 'In my car.' })).toBeTruthy();
   });
 
+  it('reads the sausage roll story with correct sounds, speech punctuation, and independent progress', () => {
+    const book = render(<Read storyId="sausage-roll" />);
+    expect(screen.getByRole('group', { name: 'I can see it by my feet.' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Hear ee in see' }));
+    expect(playClip).toHaveBeenCalledWith('audio/ee.m4a', 'ee as in see');
+    fireEvent.click(screen.getByRole('button', { name: 'Hear y in by' }));
+    expect(playClip).toHaveBeenCalledWith('audio/igh.m4a', 'y makes the eye sound in by');
+    fireEvent.click(screen.getByRole('button', { name: 'Hear the line' }));
+    expect(playClip).toHaveBeenCalledWith('audio/read/sausage-roll/page-1.wav', 'I can see it by my feet.');
+    fireEvent.click(screen.getByRole('button', { name: 'Next page →' }));
+    expect(screen.getByRole('group', { name: 'Hi! I can see my pal!' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Hear i in hi' }));
+    expect(playClip).toHaveBeenCalledWith('audio/igh.m4a', 'i makes the eye sound in hi');
+    expect(sessionStorage.getItem('cbear-read-page-sausage-roll-v1')).toBe('1');
+    expect(sessionStorage.getItem('cbear-read-page-bug-in-my-car-v1')).toBeNull();
+    book.unmount();
+    render(<Read storyId="sausage-roll" />);
+    expect(screen.getByRole('group', { name: 'Hi! I can see my pal!' })).toBeTruthy();
+    for (const line of ['I can hop up and down!', 'I hop in and splash!', 'I am wet but I can grin!']) {
+      fireEvent.click(screen.getByRole('button', { name: 'Next page →' }));
+      expect(screen.getByRole('group', { name: line })).toBeTruthy();
+    }
+    expect(screen.getByText(/You read with Cbear/)).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Read again' }));
+    expect(screen.getByRole('group', { name: 'I can see it by my feet.' })).toBeTruthy();
+  });
+
   it('has a bundled recording for every sound and every line', () => {
-    for (const page of readStory.pages) {
-      expect(page.words.join(' ') + page.punctuation).toBe(page.line);
+    expect(readStory.pages).toHaveLength(4);
+    expect(readStories['sausage-roll'].pages).toHaveLength(5);
+    for (const story of Object.values(readStories)) for (const page of story.pages) {
+      expect(page.words.map((word, index) => word + page.marks[index]).join(' ')).toBe(page.line);
       for (const word of page.words) {
         const sounds = soundsForWord(word);
         expect(sounds.map(sound => sound.letters).join('')).toBe(word.toLowerCase());
@@ -131,6 +175,10 @@ describe('Read', () => {
         }
       }
       const file = join(process.cwd(), 'public', page.audio);
+      expect(existsSync(file) && statSync(file).size > 0).toBe(true);
+    }
+    for (const name of ['sausage-roll.png', 'puddle.png', 'splash.png']) {
+      const file = join(process.cwd(), 'public/read', name);
       expect(existsSync(file) && statSync(file).size > 0).toBe(true);
     }
   });

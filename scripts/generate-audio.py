@@ -65,12 +65,23 @@ def generate_article(voice: PiperVoice) -> None:
     print("Created audio/read/a-article.wav")
 
 
+def story_line(page: dict) -> str:
+    words = page["words"]
+    marks = page.get("marks")
+    if marks is None:
+        marks = [""] * (len(words) - 1) + [page["punctuation"]]
+    if len(words) != len(marks):
+        raise ValueError("A Read page needs one punctuation entry per word")
+    return " ".join(word + mark for word, mark in zip(words, marks))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True, help="Path to en_GB-cori-medium.onnx")
     parser.add_argument("--manifest", help="Puzzle manifest to narrate")
     parser.add_argument("--core", action="store_true", help="Generate Learn word clips and success message")
     parser.add_argument("--read", action="store_true", help="Generate the bundled Read story narration")
+    parser.add_argument("--read-story", choices=["sausage-roll"], help="Generate narration for one additional Read story")
     parser.add_argument("--numbers", action="store_true", help="Generate the Flash Cards number narration")
     parser.add_argument("--spot", action="store_true", help="Generate Spot the wrong one feedback")
     args = parser.parse_args()
@@ -88,8 +99,13 @@ def main() -> None:
         story = json.loads((PUBLIC / "read/story.json").read_text())
         generate_article(voice)
         for index, page in enumerate(story["pages"], start=1):
-            line = " ".join(page["words"]) + page["punctuation"]
+            line = story_line(page)
             generate(voice, page["audio"], line)
+
+    if args.read_story:
+        story = json.loads((PUBLIC / f"read/{args.read_story}.json").read_text())
+        for page in story["pages"]:
+            generate(voice, page["audio"], story_line(page))
 
     if args.numbers:
         for number, word in enumerate(NUMBERS, start=1):
