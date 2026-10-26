@@ -8,7 +8,7 @@ import { advanceSpotProgress, freshSpotProgress, restoreSpotProgress, retrySpotP
 
 vi.mock('../src/audio', () => ({ playClip: vi.fn(() => Promise.resolve()), playPhoneme: vi.fn(() => Promise.resolve()), stopAudio: vi.fn() }));
 beforeEach(() => { sessionStorage.clear(); location.hash = ''; vi.clearAllMocks(); });
-afterEach(() => { cleanup(); vi.useRealTimers(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.useRealTimers(); vi.unstubAllGlobals(); });
 
 const cells = (container: HTMLElement) => [...container.querySelectorAll<HTMLButtonElement>('.spot-cell')];
 const target = (container: HTMLElement, direction: SpotDirection = 'wrong') => cells(container).find(cell => Boolean(cell.querySelector('.spot-glyph-mirrored')) === (direction === 'wrong'))!;
@@ -128,9 +128,18 @@ it('clears a pending advance and stops audio when changing difficulty or leaving
   expect(screen.getByText(/Card 1 of 18/)).toBeTruthy();
   fireEvent.click(screen.getByRole('radio', { name: /Standard/ }));
   expect(screen.getByText(/Card 1 of 18/)).toBeTruthy();
+  const schedule = vi.spyOn(globalThis, 'setTimeout');
+  const cancel = vi.spyOn(globalThis, 'clearTimeout');
   fireEvent.click(target(view.container));
+  const advanceCall = schedule.mock.calls.findIndex(([, delay]) => delay === 2000);
+  expect(advanceCall).toBeGreaterThanOrEqual(0);
+  const advanceTimer = schedule.mock.results[advanceCall].value;
+  const saved = sessionStorage.getItem('cbear-spot-wrong-letters-standard-v2');
   view.unmount();
-  expect(vi.getTimerCount()).toBe(0);
+  // Assert only the game's timer: jsdom may have its own pending timers.
+  expect(cancel).toHaveBeenCalledWith(advanceTimer);
+  act(() => vi.advanceTimersByTime(2000));
+  expect(sessionStorage.getItem('cbear-spot-wrong-letters-standard-v2')).toBe(saved);
   expect(stopAudio).toHaveBeenCalled();
 });
 
