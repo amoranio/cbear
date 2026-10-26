@@ -4,7 +4,7 @@ import { advanceDeckProgress, flashDecks, freshDeckProgress, restoreDeckProgress
 import { Trace } from './Trace';
 import type { TraceMode } from './traceData';
 import { SpotCards } from './SpotView';
-import type { SpotMode } from './spotCards';
+import type { SpotMode, SpotDirection } from './spotCards';
 
 const storageKey = (deckId: DeckId) => `cbear-flash-cards-${deckId}-v1`;
 
@@ -21,7 +21,8 @@ function DeckChooser() {
   return <div className="flash-page container">
     <div className="page-intro flash-intro"><span className="section-kicker">PRACTISE TOGETHER</span><h1>Flash cards. <em>One at a time.</em></h1><p>Choose a set, say what you see, then hear it together. Swipe or press Next when you are ready.</p></div>
     <a className="trace-feature" href="#flash-cards/trace"><span className="trace-feature-copy"><span className="mini-kicker">NEW · DRAW IT YOUR WAY</span><strong>Trace letters & numbers.</strong><span>Follow a soft guide, then make your own lines with a finger or mouse. Start with 1–10 and p, q, b, d, g, y.</span><span className="trace-feature-action">Start tracing →</span></span><span className="trace-feature-art" aria-hidden="true"><span>7</span><span>g</span><i /></span></a>
-    <a className="spot-feature" href="#flash-cards/spot"><span className="spot-feature-copy"><span className="mini-kicker">LOOK CLOSELY</span><strong>Spot the wrong one.</strong><span>Find a backwards letter or number among twenty-five matching shapes. Tap it to reach the next card.</span><span className="spot-feature-action">Start spotting →</span></span><span className="spot-feature-art" aria-hidden="true"><span>3</span><span>3</span><span>3</span><span className="spot-feature-mirror">3</span><span>3</span><span>3</span><span>3</span><span>3</span><span>3</span></span></a>
+    <a className="spot-feature" href="#flash-cards/spot"><span className="spot-feature-copy"><span className="mini-kicker">LOOK CLOSELY</span><strong>Spot the wrong one.</strong><span>Find a backwards letter or number. Choose a steady 5×5 grid or a growing challenge.</span><span className="spot-feature-action">Start spotting →</span></span><span className="spot-feature-art" aria-hidden="true"><span>3</span><span>3</span><span>3</span><span className="spot-feature-mirror">3</span><span>3</span><span>3</span><span>3</span><span>3</span><span>3</span></span></a>
+    <a className="spot-feature" href="#flash-cards/spot-correct"><span className="spot-feature-copy"><span className="mini-kicker">LOOK THE OTHER WAY</span><strong>Spot the correct one.</strong><span>Find the one correctly facing letter or number among backwards copies. Try standard or growing grids.</span><span className="spot-feature-action">Find the correct one →</span></span><span className="spot-feature-art" aria-hidden="true">{Array.from({ length: 9 }, (_, index) => <span key={index} className={index === 4 ? '' : 'spot-feature-mirror'}>b</span>)}</span></a>
     <div className="flash-deck-heading"><span className="section-kicker">OR CHOOSE A CARD SET</span><h2>See it. Say it. Hear it.</h2></div>
     <div className="flash-deck-grid">
       {(['numbers', 'letters', 'phonics'] as const).map((id, index) => {
@@ -126,6 +127,6 @@ function FlashDeck({ deckId }: { deckId: DeckId }) {
   </div>;
 }
 
-export function FlashCards({ deckId, traceMode, spotMode }: { deckId: DeckId | null; traceMode?: TraceMode | 'choose' | null; spotMode?: SpotMode | 'choose' | null }) {
-  return spotMode ? <SpotCards mode={spotMode === 'choose' ? null : spotMode} /> : traceMode ? <Trace mode={traceMode === 'choose' ? null : traceMode} /> : deckId ? <FlashDeck key={deckId} deckId={deckId} /> : <DeckChooser />;
+export function FlashCards({ deckId, traceMode, spotMode, spotDirection }: { deckId: DeckId | null; traceMode?: TraceMode | 'choose' | null; spotMode?: SpotMode | 'choose' | null; spotDirection?: SpotDirection }) {
+  return spotMode ? <SpotCards key={`${spotDirection}-${spotMode}`} direction={spotDirection} mode={spotMode === 'choose' ? null : spotMode} /> : traceMode ? <Trace mode={traceMode === 'choose' ? null : traceMode} /> : deckId ? <FlashDeck key={deckId} deckId={deckId} /> : <DeckChooser />;
 }
