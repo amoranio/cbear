@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { playClip } from '../src/audio';
 import { App } from '../src/main';
-import { advanceSpotProgress, chooseWrongIndex, freshSpotProgress, restoreSpotProgress, spotSets } from '../src/spotCards';
+import { advanceSpotProgress, chooseTargetIndex, freshSpotProgress, restoreSpotProgress, spotSets } from '../src/spotCards';
 
 vi.mock('../src/audio', () => ({ playClip: vi.fn(() => Promise.resolve()), playPhoneme: vi.fn(() => Promise.resolve()), stopAudio: vi.fn() }));
 
@@ -28,20 +28,20 @@ describe('spotting card data', () => {
     let progress = freshSpotProgress(spotSets.letters.cards.length, () => 0.3);
     const firstOrder = [...progress.order];
     for (let index = 0; index < spotSets.letters.cards.length - 1; index++) {
-      const previousWrong = progress.wrongIndex;
+      const previousWrong = progress.targetIndex;
       progress = advanceSpotProgress(progress, () => 0.3);
-      expect(progress.wrongIndex).not.toBe(previousWrong);
+      expect(progress.targetIndex).not.toBe(previousWrong);
     }
     expect(progress.order).toEqual(firstOrder);
-    const lastWrong = progress.wrongIndex;
+    const lastWrong = progress.targetIndex;
     progress = advanceSpotProgress(progress, () => 0.9);
     expect(progress.round).toBe(2);
-    expect(progress.wrongIndex).not.toBe(lastWrong);
+    expect(progress.targetIndex).not.toBe(lastWrong);
     expect(new Set(progress.order).size).toBe(spotSets.letters.cards.length);
     expect(progress.order).not.toEqual(firstOrder);
-    expect(chooseWrongIndex(() => 0, 0)).toBe(1);
-    expect(restoreSpotProgress(JSON.stringify(progress), spotSets.letters.cards.length, () => 0.9)?.wrongIndex).not.toBe(progress.wrongIndex);
-    expect(restoreSpotProgress(JSON.stringify({ ...progress, wrongIndex: 25 }), spotSets.letters.cards.length)).toBeNull();
+    expect(chooseTargetIndex(5, () => 0, 0)).toBe(1);
+    expect(restoreSpotProgress(JSON.stringify(progress), spotSets.letters.cards.length, () => 0.9)?.targetIndex).not.toBe(progress.targetIndex);
+    expect(restoreSpotProgress(JSON.stringify({ ...progress, targetIndex: 25 }), spotSets.letters.cards.length)).toBeNull();
   });
 });
 
@@ -76,11 +76,13 @@ describe('spotting interaction', () => {
     expect(screen.getByRole('status').textContent).toContain('Not quite');
     expect(screen.getByText(/Card 1 of 18/).textContent).toBe(before);
     expect(playClip).toHaveBeenCalledWith('audio/flash-cards/spot/try-again.wav', 'Not quite, try again.');
-    fireEvent.click(wrong);
+    const nextWrong = () => [...view.container.querySelectorAll<HTMLButtonElement>('.spot-cell')].find(cell => !cell.querySelector('.spot-glyph-mirrored'))!;
+    fireEvent.click(nextWrong());
     expect(screen.getByText(/Card 1 of 18/)).toBeTruthy();
 
-    fireEvent.click(correct);
-    fireEvent.click(correct);
+    const currentCorrect = view.container.querySelector('.spot-glyph-mirrored')!.parentElement!;
+    fireEvent.click(currentCorrect);
+    fireEvent.click(currentCorrect);
     expect(screen.getByRole('status').textContent).toContain('Well done');
     expect(playClip).toHaveBeenCalledWith('audio/flash-cards/spot/well-done.wav', 'Well done! You found it.');
     act(() => vi.advanceTimersByTime(2000));

@@ -1,8 +1,12 @@
 import { advanceDeckProgress, flashDecks, freshDeckProgress, restoreDeckProgress, type DeckProgress } from './flashCards';
 
 export type SpotMode = 'letters' | 'numbers';
+export type SpotDirection = 'wrong' | 'correct';
+export type SpotDifficulty = 'standard' | 'growing';
+export const MIN_GRID_SIZE = 5;
+export const MAX_GRID_SIZE = 10;
 export type SpotCard = { id: string; face: string; audio: string; spoken: string };
-export type SpotProgress = DeckProgress & { wrongIndex: number };
+export type SpotProgress = DeckProgress & { targetIndex: number; gridSize: number };
 
 // A mirror must be visibly different from the printed character. The omitted
 // shapes still appear in the ordinary flash-card decks.
@@ -32,30 +36,44 @@ export function isSpotMode(value: string): value is SpotMode {
   return value === 'letters' || value === 'numbers';
 }
 
-export function chooseWrongIndex(random: () => number = Math.random, previous?: number): number {
-  const hasPrevious = Number.isInteger(previous) && previous! >= 0 && previous! < 25;
-  const count = hasPrevious ? 24 : 25;
+export function chooseTargetIndex(gridSize: number, random: () => number = Math.random, previous?: number): number {
+  const tileCount = gridSize * gridSize;
+  const hasPrevious = Number.isInteger(previous) && previous! >= 0 && previous! < tileCount;
+  const count = hasPrevious ? tileCount - 1 : tileCount;
   const draw = Math.min(count - 1, Math.floor(random() * count));
   return hasPrevious && draw >= previous! ? draw + 1 : draw;
 }
 
 export function freshSpotProgress(length: number, random?: () => number): SpotProgress {
-  return { ...freshDeckProgress(length, random), wrongIndex: chooseWrongIndex(random) };
+  return { ...freshDeckProgress(length, random), gridSize: MIN_GRID_SIZE, targetIndex: chooseTargetIndex(MIN_GRID_SIZE, random) };
 }
 
-export function advanceSpotProgress(progress: SpotProgress, random?: () => number): SpotProgress {
+export function advanceSpotProgress(progress: SpotProgress, random?: () => number, difficulty: SpotDifficulty = 'standard'): SpotProgress {
+  const gridSize = difficulty === 'growing' ? Math.min(MAX_GRID_SIZE, progress.gridSize + 1) : MIN_GRID_SIZE;
   return {
     ...advanceDeckProgress(progress, random),
-    wrongIndex: chooseWrongIndex(random, progress.wrongIndex),
+    gridSize,
+    targetIndex: chooseTargetIndex(gridSize, random, progress.targetIndex),
   };
 }
 
-export function restoreSpotProgress(raw: string | null, length: number, random?: () => number): SpotProgress | null {
+export function retrySpotProgress(progress: SpotProgress, difficulty: SpotDifficulty, random?: () => number): SpotProgress {
+  const gridSize = difficulty === 'growing' ? Math.max(MIN_GRID_SIZE, progress.gridSize - 1) : MIN_GRID_SIZE;
+  return { ...progress, gridSize, targetIndex: chooseTargetIndex(gridSize, random, progress.targetIndex) };
+}
+
+export function restoreSpotProgress(raw: string | null, length: number, random?: () => number, difficulty: SpotDifficulty = 'standard'): SpotProgress | null {
   const deck = restoreDeckProgress(raw, length);
   if (!deck) return null;
   try {
-    const saved = JSON.parse(raw!) as { wrongIndex?: number };
-    if (!Number.isInteger(saved.wrongIndex) || saved.wrongIndex! < 0 || saved.wrongIndex! >= 25) return null;
-    return { order: deck.order, index: deck.index, round: deck.round, wrongIndex: chooseWrongIndex(random, saved.wrongIndex) };
+    const saved = JSON.parse(raw!) as { targetIndex?: number; wrongIndex?: number; gridSize?: number };
+    // v1 stored only wrongIndex and always used a 5×5 grid.
+    const legacy = saved.gridSize === undefined && saved.targetIndex === undefined && difficulty === 'standard';
+    const gridSize = legacy ? MIN_GRID_SIZE : saved.gridSize;
+    const targetIndex = legacy ? saved.wrongIndex : saved.targetIndex;
+    if (!Number.isInteger(gridSize) || gridSize! < MIN_GRID_SIZE || gridSize! > MAX_GRID_SIZE ||
+        (difficulty === 'standard' && gridSize !== MIN_GRID_SIZE) ||
+        !Number.isInteger(targetIndex) || targetIndex! < 0 || targetIndex! >= gridSize! * gridSize!) return null;
+    return { order: deck.order, index: deck.index, round: deck.round, gridSize: gridSize!, targetIndex: chooseTargetIndex(gridSize!, random, targetIndex) };
   } catch { return null; }
 }

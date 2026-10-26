@@ -59,14 +59,17 @@ export function App() {
   const flashPart = route.split('/')[1] ?? '';
   const tracePart = route.split('/')[2] ?? '';
   const traceMode: TraceMode | 'choose' | null = flashPart === 'trace' ? (isTraceMode(tracePart) ? tracePart : 'choose') : null;
-  const spotMode: SpotMode | 'choose' | null = flashPart === 'spot' ? (isSpotMode(tracePart) ? tracePart : 'choose') : null;
+  const spotMode: SpotMode | 'choose' | null = (flashPart === 'spot' || flashPart === 'spot-correct') ? (isSpotMode(tracePart) ? tracePart : 'choose') : null;
 
   useEffect(() => {
     const onHash = () => setRoute(location.hash);
     addEventListener('hashchange', onHash);
     return () => removeEventListener('hashchange', onHash);
   }, []);
-  useEffect(() => sessionStorage.setItem('cbear-session-v1', JSON.stringify(session)), [session]);
+  useEffect(() => {
+    try { sessionStorage.setItem('cbear-session-v1', JSON.stringify(session)); }
+    catch { /* Games remain usable when storage is unavailable. */ }
+  }, [session]);
 
   const addPoints = (points: number) => setSession(previous => ({ ...previous, points: previous.points + points }));
   const setStage = (stage: StageId) => setSession(previous => ({ ...previous, stage }));
@@ -88,7 +91,7 @@ export function App() {
       {page === 'home' && <Home />}
       {page === 'learn' && <Learn stage={session.stage} setStage={setStage} addPoints={addPoints} />}
       {page === 'read' && <Read storyId={readSlug} />}
-      {page === 'flash-cards' && <FlashCards deckId={isDeckId(flashPart) ? flashPart : null} traceMode={traceMode} spotMode={spotMode} />}
+      {page === 'flash-cards' && <FlashCards deckId={isDeckId(flashPart) ? flashPart : null} traceMode={traceMode} spotMode={spotMode} spotDirection={flashPart === 'spot-correct' ? 'correct' : 'wrong'} />}
       {page === 'play' && (playSlug === null ? <PlayGallery session={session} /> : <Play key={playSlug} slug={playSlug} stage={session.stage} session={session} markTarget={markTarget} />)}
     </main>
 
